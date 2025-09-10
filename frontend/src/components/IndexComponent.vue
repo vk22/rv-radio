@@ -192,7 +192,7 @@ const track = ref({});
 
 
 const fetchTrack = async () => {
-  const res = await fetch("http://localhost:3001/api/nowplaying");
+  const res = await fetch("/api/nowplaying");
   const data = await res.json();
   console.log('fetchTrack ', data)
   if (data.title) {
@@ -216,7 +216,7 @@ const play = (index) => {
   let track = {
     freq: "81.4",
     title: "Revibed Radio",
-    src: "http://localhost:8001/radio.mp3",
+    src: "/stream/radio.mp3",
     howl: null,
   };
 

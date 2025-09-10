@@ -8,7 +8,7 @@ app.use(cors())
 const PORT = 3001;
 const ICECAST_URL = "http://icecast:8001/status-json.xsl";
 
-app.get("/api/info", async (req, res) => {
+app.get("/info", async (req, res) => {
   try {
     const itemsForSale = JSON.parse(await fs.promises.readFile('data/forSale.json', 'utf-8'));
     res.json({
@@ -19,7 +19,7 @@ app.get("/api/info", async (req, res) => {
   }
 });
 
-app.get("/api/nowplaying", async (req, res) => {
+app.get("/nowplaying", async (req, res) => {
   try {
     const response = await fetch(ICECAST_URL);
     const data = await response.json();
