@@ -20,7 +20,7 @@ header {
   /* background: #f8f8f8; */
   font-family: 'Montserrat', sans-serif;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
   position: fixed;
   z-index: 999;
@@ -28,6 +28,12 @@ header {
   padding: 2.5rem 2rem;
   top: 0;
   left: 0;
+}
+
+@media (max-width: 600px) {
+header {
+  justify-content: center;
+}
 }
 
 .logo {
@@ -58,7 +64,7 @@ header {
   }
 
   .logo {
-    margin: 0 2rem 0 0;
+    /* margin: 0 2rem 0 0; */
   }
 
   header .wrapper {

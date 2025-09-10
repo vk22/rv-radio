@@ -1,6 +1,14 @@
 @import './base.css';
 
+body {
+  display: flex;
+  place-items: center;
+}
+
 #app {
+  display: flex;
+  width: 600px;
+  justify-content: center;
   max-width: 100%;
   margin: 0 auto;
   padding: 2rem;
@@ -37,15 +45,7 @@ img {
   }
 } */
 
-@media (min-width: 1024px) {
-  body {
-    display: flex;
-    place-items: center;
-  }
 
-  #app {
-    display: flex;
-    width: 600px;
-    justify-content: center;
-  }
-}
+
+
+@media (min-width: 1024px) {}
