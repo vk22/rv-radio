@@ -10,6 +10,6 @@ RUN npm install
 # Копируем исходный код
 COPY . .
 
-EXPOSE 3000
+EXPOSE 3001
 
 CMD ["node", "server.js"]
