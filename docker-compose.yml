@@ -1,0 +1,43 @@
+version: "3.8"
+
+services:
+  icecast:
+    image: moul/icecast
+    container_name: icecast
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./icecast/icecast.xml:/etc/icecast2/icecast.xml:ro
+      - ./icecast/logs:/usr/local/icecast/logs
+      - ./icecast/web:/usr/share/icecast2/web:ro
+      - ./icecast/admin:/usr/share/icecast2/admin:ro
+
+  mpd:
+    image: vimagick/mpd
+    container_name: mpd
+    depends_on:
+      - icecast
+    volumes:
+      - ./mpd/mpd.conf:/etc/mpd.conf:ro
+      - ./mpd/music:/music:ro
+      - ./mpd/playlists:/playlists
+      - ./mpd/data:/var/lib/mpd
+    restart: unless-stopped
+
+  backend:
+    build: ./backend
+    container_name: backend
+    volumes:
+      - ./backend:/usr/app
+    ports:
+      - "3000:3000"
+    depends_on:
+      - icecast
+
+  frontend:
+    build: ./frontend
+    container_name: frontend
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend

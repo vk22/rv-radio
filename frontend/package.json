@@ -1,0 +1,26 @@
+{
+  "name": "vinyl-store",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "gsap": "^3.12.5",
+    "gsap-trial": "^3.12.5",
+    "howler": "^2.2.4",
+    "pinia": "^2.2.4",
+    "vee-validate": "^4.13.2",
+    "vue": "^3.5.11",
+    "vue-router": "^4.4.5",
+    "yup": "^1.4.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.1.4",
+    "vite": "^5.4.8",
+    "vite-plugin-vue-devtools": "^7.4.6"
+  }
+}

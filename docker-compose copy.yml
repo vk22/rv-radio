@@ -1,0 +1,34 @@
+version: "3.9"
+
+services:
+  icecast:
+    image: moul/icecast
+    container_name: icecast
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./icecast/icecast.xml:/etc/icecast2/icecast.xml:ro
+      - ./icecast/logs:/usr/local/icecast/logs
+    restart: unless-stopped
+
+  mpd:
+    image: vimagick/mpd
+    container_name: mpd
+    depends_on:
+      - icecast
+    volumes:
+      - ./mpd/mpd.conf:/etc/mpd.conf:ro
+      - ./mpd/music:/music:ro
+      - ./mpd/playlists:/playlists
+      - ./mpd/data:/var/lib/mpd
+    command: >
+      sh -c "
+      mpd --no-daemon /etc/mpd.conf &
+      sleep 2 &&
+      mpc update &&
+      mpc ls | mpc add &&
+      mpc random on &&
+      mpc repeat on &&
+      mpc play &&
+      tail -f /var/lib/mpd/mpd.log"
+    restart: unless-stopped
