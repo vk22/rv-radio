@@ -12,7 +12,7 @@ export default defineConfig({
   ],
   server: {
     host: "0.0.0.0",
-    allowedHosts: "all"
+    allowedHosts: ['rvradio.uploader-x.com']
   },
   resolve: {
     alias: {
