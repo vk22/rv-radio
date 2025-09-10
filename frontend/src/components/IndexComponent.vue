@@ -216,7 +216,7 @@ const play = (index) => {
   let track = {
     freq: "81.4",
     title: "Revibed Radio",
-    src: "http://localhost:8000/radio.mp3",
+    src: "http://localhost:8001/radio.mp3",
     howl: null,
   };
 

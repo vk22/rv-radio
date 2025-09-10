@@ -6,7 +6,7 @@ import fs from "fs";
 const app = express();
 app.use(cors())
 const PORT = 3001;
-const ICECAST_URL = "http://icecast:8000/status-json.xsl";
+const ICECAST_URL = "http://icecast:8001/status-json.xsl";
 
 app.get("/api/info", async (req, res) => {
   try {

@@ -5,7 +5,7 @@ services:
     image: moul/icecast
     container_name: icecast
     ports:
-      - "8000:8000"
+      - "8001:8001"
     volumes:
       - ./icecast/icecast.xml:/etc/icecast2/icecast.xml:ro
       - ./icecast/logs:/usr/local/icecast/logs
