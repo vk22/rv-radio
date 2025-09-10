@@ -192,7 +192,7 @@ const track = ref({});
 
 
 const fetchTrack = async () => {
-  const res = await fetch("http://localhost:3000/api/nowplaying");
+  const res = await fetch("http://localhost:3001/api/nowplaying");
   const data = await res.json();
   console.log('fetchTrack ', data)
   if (data.title) {
