@@ -13,7 +13,7 @@ export default defineConfig({
   server: {
     host: "0.0.0.0",
     port: 5500,
-    allowedHosts: ['rvradio.uploader-x.com']
+    allowedHosts: ['skyharp.live']
   },
   resolve: {
     alias: {
