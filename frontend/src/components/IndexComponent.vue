@@ -1,6 +1,6 @@
 <template>
   <div class="pb-8" ref="main">
-    <div class="relative z-[99] mt-8 w-[370px] max-w-full">
+    <div class="relative z-[99] mt-8 w-[300px] max-w-full">
       <AnimatedComponent delay="250" animation-type="slideup">
         <!-- <div class="flex w-full justify-center text-[0.7rem] font-semibold uppercase tracking-[1px] text-[#555]">Now playing</div> -->
         <div class="absolute top-[0px] z-[999] flex h-[400px] w-full justify-center pt-[45%]">
@@ -10,86 +10,12 @@
             @click="play"
             :class="{ 'opacity-50': loading }"
           >
-            <svg
-              width="50px"
-              height="60px"
-              viewBox="0 0 26 32"
-              version="1.1"
-              xmlns="http://www.w3.org/2000/svg"
-              xmlns:xlink="http://www.w3.org/1999/xlink"
-            >
-              <g
-                id="Page-1"
-                stroke="none"
-                stroke-width="1"
-                fill="none"
-                fill-rule="evenodd"
-                opacity="0.900928442"
-              >
-                <g
-                  id="Desktop-HD-Copy-3"
-                  transform="translate(-97.000000, -1135.000000)"
-                  fill="#ffffff"
-                >
-                  <g id="player" transform="translate(0.000000, 1112.000000)">
-                    <g id="Group-4" transform="translate(49.000000, 23.000000)">
-                      <polygon
-                        id="Triangle"
-                        points="74 16 48 32 48 0"
-                      ></polygon>
-                    </g>
-                  </g>
-                </g>
-              </g>
-            </svg>
+            <Play class="h-[80px] w-[70px] fill-white text-white opacity-90" :stroke-width="0" />
           </div>
           <div class="cursor-pointer transition-opacity duration-150 ease-in-out hover:opacity-[0.85]" v-if="playing" @click="pause">
-            <svg
-              width="40px"
-              height="60px"
-              viewBox="0 0 22 30"
-              version="1.1"
-              xmlns="http://www.w3.org/2000/svg"
-              xmlns:xlink="http://www.w3.org/1999/xlink"
-            >
-              <g
-                id="Page-1"
-                stroke="none"
-                stroke-width="1"
-                fill="none"
-                fill-rule="evenodd"
-                opacity="0.900928442"
-              >
-                <g id="pauseBtn" fill="#ffffff">
-                  <g id="Page-1">
-                    <g id="Desktop-HD-Copy-3">
-                      <g id="player">
-                        <g id="Group-4">
-                          <g id="Group-6">
-                            <rect
-                              id="Rectangle"
-                              x="0"
-                              y="0"
-                              width="8"
-                              height="30"
-                            ></rect>
-                            <rect
-                              id="Rectangle"
-                              x="14"
-                              y="0"
-                              width="8"
-                              height="30"
-                            ></rect>
-                          </g>
-                        </g>
-                      </g>
-                    </g>
-                  </g>
-                </g>
-              </g>
-            </svg>
+            <Pause class="h-[80px] w-14 fill-white text-white opacity-90" :stroke-width="0" />
           </div>
-          <div class="cursor-pointer transition-opacity duration-150 ease-in-out hover:opacity-[0.85]" v-if="loading">
+          <div class="cursor-pointer transition-opacity duration-150 ease-in-out hover:opacity-[0.85] pt-2" v-if="loading">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="60px">
               <radialGradient
                 id="a12"
@@ -158,6 +84,7 @@
 <script setup>
 import { onBeforeUnmount, onMounted, ref } from 'vue';
 import { Howl, Howler } from "howler";
+import { Pause, Play } from 'lucide-vue-next';
 import AnimatedComponent from './AnimatedComponent.vue';
 import ProjectItem from './ProjectItem.vue'
 // import gsap from 'gsap-trial';

@@ -12,6 +12,7 @@
     "gsap": "^3.12.5",
     "gsap-trial": "^3.12.5",
     "howler": "^2.2.4",
+    "lucide-vue-next": "^1.0.0",
     "vue": "^3.5.11",
     "vue-router": "^4.4.5"
   },
