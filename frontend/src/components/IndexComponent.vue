@@ -1,9 +1,9 @@
 <template>
   <div class="pb-8" ref="main">
-    <div class="relative z-[99] mt-8 w-[300px] max-w-full">
+    <div class="relative z-[99] mt-8 w-[370px] max-w-full">
       <AnimatedComponent delay="250" animation-type="slideup">
-        <div class="flex w-full justify-center text-[0.7rem] font-semibold uppercase tracking-[1px] text-[#555]">Now playing</div>
-        <div class="absolute top-[50px] z-[999] flex h-[400px] w-full justify-center pt-[45%]">
+        <!-- <div class="flex w-full justify-center text-[0.7rem] font-semibold uppercase tracking-[1px] text-[#555]">Now playing</div> -->
+        <div class="absolute top-[0px] z-[999] flex h-[400px] w-full justify-center pt-[45%]">
           <div
             class="cursor-pointer transition-opacity duration-150 ease-in-out hover:opacity-[0.85]"
             v-if="!playing && !loading"
