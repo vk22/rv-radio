@@ -1,5 +1,5 @@
 <template>
-    <div ref="target" :class="{'visible': animate }">
+    <div ref="target">
         <transition :name="animationType">
             <div v-appear="animate" class="animated-component">
                 <slot />
@@ -40,39 +40,3 @@ onMounted(() => {
     observer.observe(target.value as Element);
 });
 </script>
-
-
-
-<style scoped>
-.animated-component.fade-enter-from,
-.animated-component.slideup-enter-from {
-    transition: none;
-}
-
-/* Fade animation */
-.fade-enter-active,
-.fade-leave-active {
-    transition: opacity 300ms ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-    opacity: 0;
-}
-
-/* slideup animation */
-.slideup-enter-active,
-.slideup-leave-active {
-    transform: translateY(0);
-    opacity: 1;
-    transition: all 1s ease;
-}
-
-.slideup-enter-from,
-.slideup-leave-to {
-    opacity: 0;
-    transform: translateY(50px);
-}
-
-
-</style>

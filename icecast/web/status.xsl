@@ -1,7 +1,7 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
-    <xsl:include href="includes/web-page.xsl"/>
-    <xsl:include href="includes/player.xsl"/>
-    <xsl:include href="includes/playlist.xsl"/>
+    <xsl:include href="../admin/includes/web-page.xsl"/>
+    <xsl:include href="../admin/includes/player.xsl"/>
+    <xsl:include href="../admin/includes/playlist.xsl"/>
     <xsl:variable name="title">Status</xsl:variable>
     <xsl:template name="content">
         <!--mount point stats-->

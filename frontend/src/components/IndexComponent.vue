@@ -1,20 +1,14 @@
 <template>
-  <div class="index" ref="main" :class="{ blur: formModalOpened }">
-    <!-- <Sunrise></Sunrise> -->
-    <!-- <div class="slider-background">
-      <AnimatedComponent delay="0" animation-type="slideup">
-          <img :src="'/' + imgBack" alt="">
-      </AnimatedComponent>
-    </div> -->
-    <div class="projects-index">
+  <div class="pb-8" ref="main">
+    <div class="relative z-[99] mt-8 w-[300px] max-w-full">
       <AnimatedComponent delay="250" animation-type="slideup">
-        <div class="top-title">Now playing</div>
-        <div class="radio-controls-wrap">
+        <div class="flex w-full justify-center text-[0.7rem] font-semibold uppercase tracking-[1px] text-[#555]">Now playing</div>
+        <div class="absolute top-[50px] z-[999] flex h-[400px] w-full justify-center pt-[45%]">
           <div
-            class="radioBtn play"
+            class="cursor-pointer transition-opacity duration-150 ease-in-out hover:opacity-[0.85]"
             v-if="!playing && !loading"
             @click="play"
-            :class="{ loading: loading }"
+            :class="{ 'opacity-50': loading }"
           >
             <svg
               width="50px"
@@ -49,7 +43,7 @@
               </g>
             </svg>
           </div>
-          <div class="radioBtn pause" v-if="playing" @click="pause">
+          <div class="cursor-pointer transition-opacity duration-150 ease-in-out hover:opacity-[0.85]" v-if="playing" @click="pause">
             <svg
               width="40px"
               height="60px"
@@ -95,7 +89,7 @@
               </g>
             </svg>
           </div>
-          <div class="radioBtn loadingBtn" v-if="loading">
+          <div class="cursor-pointer transition-opacity duration-150 ease-in-out hover:opacity-[0.85]" v-if="loading">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="60px">
               <radialGradient
                 id="a12"
@@ -150,13 +144,10 @@
         </div>
         <ProjectItem :link="currentItem.link">
           <template #image>
-            <img :src="'/covers/' + currentItem.img" alt="" />
+            <img v-if="currentItem.imageUrl" :src="currentItem.imageUrl" alt="" @error="useFallbackImage" />
           </template>
           <template #title>{{ currentItem.title }}</template>
           <template #artist>{{ currentItem.artist }}</template>
-          <template #media>{{ currentItem.media }}</template>
-          <template #sleeve>{{ currentItem.sleeve }}</template>
-          <template #price>{{ currentItem.price }}</template>
         </ProjectItem>
       </AnimatedComponent>
     </div>
@@ -165,21 +156,18 @@
 
 
 <script setup>
-import { onMounted, computed, ref } from 'vue';
+import { onBeforeUnmount, onMounted, ref } from 'vue';
 import { Howl, Howler } from "howler";
 import AnimatedComponent from './AnimatedComponent.vue';
 import ProjectItem from './ProjectItem.vue'
-import Sunrise from './Sunrise.vue'
-import { useReservationStore } from "../store/reservation";
-const store = useReservationStore();
-const formModalOpened = computed(() => store.getFormModalState)
 // import gsap from 'gsap-trial';
 // import { ScrollTrigger } from 'gsap-trial/ScrollTrigger';
 // import { ScrollSmoother } from 'gsap-trial/ScrollSmoother';
 
 // gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
 const currentItem = ref({
-  img: "cover.jpg",
+  imageUrl: "/cover.jpg",
+  fallbackImageUrl: null,
   title: "",
   artist: "",
   media: "",
@@ -188,15 +176,26 @@ const currentItem = ref({
   link: "https://discogs.com/",
 });
 
-const track = ref({});
-
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001";
+const STREAM_URL = import.meta.env.VITE_STREAM_URL || "http://localhost:8001/radio.mp3";
+let trackInterval;
 
 const fetchTrack = async () => {
-  const res = await fetch("http://176.58.98.83:3001/nowplaying");
-  const data = await res.json();
-  console.log('fetchTrack ', data)
-  if (data.title) {
-    currentItem.value = data;
+  try {
+    const res = await fetch(`${API_URL}/nowplaying`);
+    const data = await res.json();
+    if (data.title) {
+      currentItem.value = data;
+    }
+  } catch (err) {
+    console.error("Failed to fetch current track", err);
+  }
+};
+
+const useFallbackImage = () => {
+  const fallbackImageUrl = currentItem.value.fallbackImageUrl;
+  if (fallbackImageUrl && currentItem.value.imageUrl !== fallbackImageUrl) {
+    currentItem.value.imageUrl = fallbackImageUrl;
   }
 };
 
@@ -216,7 +215,7 @@ const play = (index) => {
   let track = {
     freq: "81.4",
     title: "Revibed Radio",
-    src: "http://176.58.98.83:8001/radio.mp3",
+    src: STREAM_URL,
     howl: null,
   };
 
@@ -260,7 +259,11 @@ const stop = (index) => {
 
 onMounted(() => {
   fetchTrack();
-  setInterval(fetchTrack, 5000);
+  trackInterval = setInterval(fetchTrack, 5000);
+});
+
+onBeforeUnmount(() => {
+  clearInterval(trackInterval);
 });
 
 
@@ -312,96 +315,3 @@ onMounted(() => {
 // });
 
 </script>
-
-<style>
-.index {
-  padding-bottom: 2rem;
-}
-.blur {
-  opacity: 0.5;
-}
-
-.slider-background {
-  position: fixed;
-  width: 100vw;
-  height: 100vh;
-  top: 0;
-  left: 0;
-  z-index: -1;
-  display: flex;
-  align-items: center;
-}
-
-.projects-index {
-  margin-top: 2rem;
-  position: relative;
-  z-index: 99;
-  width: 400px;
-}
-
-.top-title {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  color: #ddd;
-  text-transform: uppercase;
-  font-size: 0.7rem;
-  font-weight: 600;
-  letter-spacing: 1px;
-}
-
-.radio-controls-wrap {
-  position: absolute;
-  top: 50px;
-  z-index: 999;
-  width: 100%;
-  height: 400px;
-  display: flex;
-  /* align-items: center; */
-  justify-content: center;
-  padding-top: 45%;
-}
-
-.radio-controls-wrap .radioBtn {
-  cursor: pointer;
-  transition: 0.15s ease-in-out all;
-}
-
-.radio-controls-wrap .radioBtn:hover {
-  opacity: 0.85;
-}
-
-.radio-controls-wrap .radioBtn.loading {
-  opacity: 0.5;
-}
-
-@media (max-width: 600px) {
-  h1 {
-    font-size: 2.5em;
-    font-weight: 700;
-    line-height: 2.75rem;
-    margin-bottom: 1rem;
-  }
-  .projects-index {
-    margin-top: 2rem;
-  }
-  p {
-    font-size: 1.1rem;
-  }
-}
-
-@media (min-width: 600px) {
-  h1 {
-    font-size: 4.5em;
-    font-weight: 700;
-    line-height: 4.85rem;
-    margin-bottom: 1rem;
-  }
-  .projects-index {
-    margin-top: 2rem;
-  }
-  p {
-    font-size: 1.15rem;
-  }
-}
-</style>

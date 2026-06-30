@@ -3,3 +3,5 @@ icecast/logs/
 mpd/data/
 mpd/playlists/
 frontend/public/covers
+node_modules/
+frontend/dist/

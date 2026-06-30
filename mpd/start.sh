@@ -6,7 +6,10 @@ mpd --no-daemon /etc/mpd.conf &
 sleep 2
 
 # Сканируем библиотеку
-mpc update
+mpc update --wait
+
+# Пересобираем плейлист из текущей библиотеки
+mpc clear
 mpc ls | mpc add
 
 # Включаем случайное воспроизведение и повтор

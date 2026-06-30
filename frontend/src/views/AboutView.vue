@@ -1,9 +1,4 @@
-<script setup>
-import Sunrise from '../components/Sunrise.vue'
-</script>
-
 <template>
-  <main>
-    <Sunrise />
+  <main class="min-h-screen text-white">
   </main>
 </template>

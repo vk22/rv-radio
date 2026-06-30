@@ -2,71 +2,152 @@ import express from "express";
 import cors from "cors";
 import fetch from "node-fetch";
 import fs from "fs";
+import net from "net";
 
 const app = express();
-app.use(cors())
-const PORT = 3001;
-const ICECAST_URL = "http://icecast:8001/status-json.xsl";
+app.use(cors());
+
+const PORT = process.env.PORT || 3001;
+const ICECAST_URL = process.env.ICECAST_URL || "http://icecast:8001/status-json.xsl";
+const MPD_HOST = process.env.MPD_HOST || "mpd";
+const MPD_PORT = Number.parseInt(process.env.MPD_PORT || "6600", 10);
+const EMPTY_NOW_PLAYING = {
+  releaseID: null,
+  imageUrl: null,
+  fallbackImageUrl: null,
+  title: null,
+  artist: null,
+  media: null,
+  sleeve: null,
+  price: null,
+  link: null,
+  status: "empty",
+};
+
+const readItemsForSale = async () => {
+  return JSON.parse(await fs.promises.readFile("data/forSale.json", "utf-8"));
+};
+
+const readTracks = async () => {
+  return JSON.parse(await fs.promises.readFile("data/tracks.json", "utf-8"));
+};
+
+const getSource = (source) => {
+  if (Array.isArray(source)) {
+    return source.find((item) => item?.title) || source[0] || {};
+  }
+
+  return source || {};
+};
+
+const getCurrentMpdFile = () => {
+  return new Promise((resolve) => {
+    const socket = net.createConnection({ host: MPD_HOST, port: MPD_PORT });
+    let buffer = "";
+    let commandSent = false;
+
+    const finish = (filename = null) => {
+      socket.destroy();
+      resolve(filename);
+    };
+
+    socket.setTimeout(2000, () => finish());
+    socket.on("error", () => finish());
+    socket.on("data", (chunk) => {
+      buffer += chunk.toString("utf8");
+
+      if (!commandSent && buffer.startsWith("OK MPD")) {
+        commandSent = true;
+        socket.write("currentsong\nclose\n");
+      }
+
+      if (buffer.includes("\nOK\n")) {
+        const fileLine = buffer.split("\n").find((line) => line.startsWith("file: "));
+        finish(fileLine ? fileLine.slice("file: ".length).trim() : null);
+      }
+    });
+  });
+};
+
+const findTrackByFile = (tracks, currentFile) => {
+  if (!currentFile) {
+    return null;
+  }
+
+  return tracks.find((track) => track.file === currentFile);
+};
 
 app.get("/info", async (req, res) => {
   try {
-    const itemsForSale = JSON.parse(await fs.promises.readFile('data/forSale.json', 'utf-8'));
+    const itemsForSale = await readItemsForSale();
     res.json({
         data: itemsForSale
     });
   } catch (err) {
-    res.status(500).json({ error: err });
+    res.status(500).json({ error: err.message });
   }
 });
 
 app.get("/nowplaying", async (req, res) => {
   try {
     const response = await fetch(ICECAST_URL);
-    const data = await response.json();
-    console.log('data ', data)
-    const source = data.icestats?.source || {};
-
-    if (source.title) {
-        const pos = source.title.split('-')[0].trim();
-        const releaseID = source.title.split('-')[1].trim(); 
-
-        const itemsForSale = JSON.parse(await fs.promises.readFile('data/forSale.json', 'utf-8'));
-        const releaseData = itemsForSale.find(item => item.release.id === +releaseID);
-        if (releaseData) {
-            const artist = releaseData.release.artist;
-            const title = releaseData.release.title;
-            const media = releaseData.condition;
-            const sleeve = releaseData.sleeve_condition;
-            const link = releaseData.uri;
-            const img = `${releaseID}.jpg`;
-            const price = releaseData.original_price.formatted;
-
-            res.json({
-                releaseID: +releaseID,
-                img: img,
-                title: title,
-                artist: artist,
-                media: media,
-                sleeve: sleeve,
-                price: price,
-                link: link,
-            });
-        }
-    } else {
-        res.json({
-            releaseID: null,
-            img: null,
-            title: null,
-            artist: null,
-            media: null,
-            sleeve: null,
-            price: null,
-            link: null,
-        });
+    if (!response.ok) {
+      res.status(502).json({
+        ...EMPTY_NOW_PLAYING,
+        status: "icecast_error",
+        error: `Icecast responded with ${response.status}`,
+      });
+      return;
     }
 
+    const data = await response.json();
+    const source = getSource(data.icestats?.source);
+    const currentFile = await getCurrentMpdFile();
+
+    if (!currentFile) {
+      res.json({
+        ...EMPTY_NOW_PLAYING,
+        status: "no_current_file",
+        rawTitle: source.title || null,
+        rawFile: currentFile,
+      });
+      return;
+    }
+
+    const tracks = await readTracks();
+    const track = findTrackByFile(tracks, currentFile);
+
+    if (!track) {
+      res.json({
+        ...EMPTY_NOW_PLAYING,
+        status: "track_not_found",
+        rawTitle: source.title,
+        rawFile: currentFile,
+      });
+      return;
+    }
+
+    res.json({
+      releaseID: track.releaseId || null,
+      imageUrl: track.cover ? `/covers/${track.cover}` : null,
+      fallbackImageUrl: null,
+      title: track.title || null,
+      artist: track.artist || null,
+      media: track.media || null,
+      sleeve: track.sleeve || null,
+      price: track.price || null,
+      link: track.link || null,
+      position: track.position || null,
+      status: "ok",
+      rawTitle: source.title,
+      rawFile: currentFile,
+    });
   } catch (err) {
-    res.status(500).json({ error: err });
+    res.status(500).json({
+      ...EMPTY_NOW_PLAYING,
+      status: "backend_error",
+      error: err.message,
+    });
   }
 });
 
