@@ -12,6 +12,7 @@ const ICECAST_URL = process.env.ICECAST_URL || "http://icecast:8001/status-json.
 const MPD_HOST = process.env.MPD_HOST || "mpd";
 const MPD_PORT = Number.parseInt(process.env.MPD_PORT || "6600", 10);
 const EMPTY_NOW_PLAYING = {
+  id: null,
   releaseID: null,
   imageUrl: null,
   fallbackImageUrl: null,
@@ -69,12 +70,22 @@ const getCurrentMpdFile = () => {
   });
 };
 
-const findTrackByFile = (tracks, currentFile) => {
+const getTrackIdFromFile = (currentFile) => {
   if (!currentFile) {
     return null;
   }
 
-  return tracks.find((track) => track.file === currentFile);
+  return currentFile.replace(/\.mp3$/i, "");
+};
+
+const findTrackById = (tracks, currentFile) => {
+  const trackId = getTrackIdFromFile(currentFile);
+
+  if (!trackId) {
+    return null;
+  }
+
+  return tracks.find((track) => track.id === trackId);
 };
 
 app.get("/info", async (req, res) => {
@@ -115,7 +126,7 @@ app.get("/nowplaying", async (req, res) => {
     }
 
     const tracks = await readTracks();
-    const track = findTrackByFile(tracks, currentFile);
+    const track = findTrackById(tracks, currentFile);
 
     if (!track) {
       res.json({
@@ -128,6 +139,7 @@ app.get("/nowplaying", async (req, res) => {
     }
 
     res.json({
+      id: track.id || null,
       releaseID: track.releaseId || null,
       imageUrl: track.cover ? `/covers/${track.cover}` : null,
       fallbackImageUrl: null,

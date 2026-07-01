@@ -1,370 +1,407 @@
 [
   {
+    "id": "674ee9e25551a306d617dab0",
     "position": "A2",
     "releaseId": 2534640,
     "artist": "Archipel (2)",
     "title": "Ki Moun'ou Ye",
-    "file": "A2-2534640.mp3",
+    "file": "674ee9e25551a306d617dab0.mp3",
     "cover": "2534640.jpg"
   },
   {
-    "position": "A2",
-    "releaseId": 167399,
-    "artist": "Bill Nelson",
-    "title": "Familiar Spirit",
-    "file": "A2-167399.mp3",
-    "cover": "167399.jpg"
-  },
-  {
-    "position": "B",
-    "releaseId": 915967,
-    "artist": "Trancefeld",
-    "title": "Love Song",
-    "file": "B-915967.mp3",
-    "cover": "915967.jpg"
-  },
-  {
-    "position": "A1",
-    "releaseId": 1082282,
-    "artist": "Ze Carlos",
-    "title": "Venha (Remix)",
-    "file": "A1-1082282.mp3",
-    "cover": "1082282.jpg"
-  },
-  {
-    "position": "A2",
-    "releaseId": 2771807,
-    "artist": "Lisa Williamson",
-    "title": "So In Love With You (Instrumental)",
-    "file": "A2-2771807.mp3",
-    "cover": "2771807.jpg"
-  },
-  {
-    "position": "B",
-    "releaseId": 29195605,
-    "artist": "David Steele (7)",
-    "title": "Indian (Instrumental)",
-    "file": "B-29195605.mp3",
-    "cover": "29195605.jpg"
-  },
-  {
-    "position": "A2",
-    "releaseId": 7299819,
-    "artist": "Dudu Araújo",
-    "title": "A2. Afronta",
-    "file": "A2-7299819.mp3",
-    "cover": "7299819.jpg"
-  },
-  {
-    "position": "A1",
-    "releaseId": 3022607,
-    "artist": "Jayfield Orchestra",
-    "title": "A1. Alambo",
-    "file": "A1-3022607.mp3",
-    "cover": "3022607.jpg"
-  },
-  {
-    "position": "A",
-    "releaseId": 2721383,
-    "artist": "Afubi",
-    "title": "A. Bit Of Your Love",
-    "file": "A-2721383.mp3",
-    "cover": "2721383.jpg"
-  },
-  {
-    "position": "A",
-    "releaseId": 1592798,
-    "artist": "Chilli Dogz",
-    "title": "Bliss (Mix 1)",
-    "file": "A-1592798.mp3",
-    "cover": "1592798.jpg"
-  },
-  {
-    "position": "B",
-    "releaseId": 3226371,
-    "artist": "Brenda And The Beach Balls",
-    "title": "B. Dancing Thru' The Night",
-    "file": "B-3226371.mp3",
-    "cover": "3226371.jpg"
-  },
-  {
+    "id": "6706e6e84c92c04e8a2670c9",
     "position": "B",
     "releaseId": 3931921,
     "artist": "John-John (8)",
     "title": "B. Just On A Rope (Instrumental)",
-    "file": "B-3931921.mp3",
+    "file": "6706e6e84c92c04e8a2670c9.mp3",
     "cover": "3931921.jpg"
   },
   {
-    "position": "A3",
-    "releaseId": 3547111,
-    "artist": "Merchant",
-    "title": "Symphony Of Love",
-    "file": "A3-3547111.mp3",
-    "cover": "3547111.jpg"
-  },
-  {
-    "position": "B1",
-    "releaseId": 718176,
-    "artist": "Sirius Corporation",
-    "title": "Piano Forte",
-    "file": "B1-718176.mp3",
-    "cover": "718176.jpg"
-  },
-  {
-    "position": "B",
-    "releaseId": 7535866,
-    "artist": "Avant Garde",
-    "title": "Everybody's Lover",
-    "file": "B-7535866.mp3",
-    "cover": "7535866.jpg"
-  },
-  {
+    "id": "6706d64caaa83c044fea8c10",
     "position": "A",
-    "releaseId": 3222202,
-    "artist": "Disfida",
-    "title": "Back To Reality",
-    "file": "A-3222202.mp3",
-    "cover": "3222202.jpg"
+    "releaseId": 1592798,
+    "artist": "Chilli Dogz",
+    "title": "Bliss (Mix 1)",
+    "file": "6706d64caaa83c044fea8c10.mp3",
+    "cover": "1592798.jpg"
   },
   {
-    "position": "B",
-    "releaseId": 16544664,
-    "artist": "Miss D.",
-    "title": "Moving (Do It Again- Mix)",
-    "file": "B-16544664.mp3",
-    "cover": "16544664.jpg"
-  },
-  {
-    "position": "A3",
-    "releaseId": 1909228,
-    "artist": "Joy Ryder",
-    "title": "Bad",
-    "file": "A3-1909228.mp3",
-    "cover": "1909228.jpg"
-  },
-  {
-    "position": "B",
-    "releaseId": 2663482,
-    "artist": "Lisa King",
-    "title": "You've Got Magic",
-    "file": "B-2663482.mp3",
-    "cover": "2663482.jpg"
-  },
-  {
-    "position": "B",
-    "releaseId": 12754764,
-    "artist": "Mango Groove",
-    "title": "Telephone Lover",
-    "file": "B-12754764.mp3",
-    "cover": "12754764.jpg"
-  },
-  {
-    "position": "A",
-    "releaseId": 13893931,
-    "artist": "Yvon Mora",
-    "title": "Tropique Du Cancer",
-    "file": "A-13893931.mp3",
-    "cover": "13893931.jpg"
-  },
-  {
-    "position": "A2",
-    "releaseId": 10998342,
-    "artist": "Alston & The Fremantle Doctor",
-    "title": "Dreamtime Trance",
-    "file": "A2-10998342.mp3",
-    "cover": "10998342.jpg"
-  },
-  {
-    "position": "B1",
-    "releaseId": 7416772,
-    "artist": "Almir",
-    "title": "Santa Glória",
-    "file": "B1-7416772.mp3",
-    "cover": "7416772.jpg"
-  },
-  {
-    "position": "B2",
-    "releaseId": 1473292,
-    "artist": "Claudia",
-    "title": "Hold On (Instrumental)",
-    "file": "B2-1473292.mp3",
-    "cover": "1473292.jpg"
-  },
-  {
-    "position": "B",
-    "releaseId": 2218569,
-    "artist": "George Martin",
-    "title": "Back Gammon (Instrumental)",
-    "file": "B-2218569.mp3",
-    "cover": "2218569.jpg"
-  },
-  {
+    "id": "6706e9204c92c04e8a26815c",
     "position": "A1",
-    "releaseId": 6230001,
-    "artist": "Sound Revolution",
-    "title": "Stay",
-    "file": "A1-6230001.mp3",
-    "cover": "6230001.jpg"
-  },
-  {
-    "position": "A",
-    "releaseId": 1676330,
-    "artist": "Westend 2",
-    "title": "Vergessen",
-    "file": "A-1676330.mp3",
-    "cover": "1676330.jpg"
-  },
-  {
-    "position": "B2",
-    "releaseId": 4119923,
-    "artist": "Frances",
-    "title": "Surrender Your Love (Instrumental)",
-    "file": "B2-4119923.mp3",
-    "cover": "4119923.jpg"
-  },
-  {
-    "position": "B1",
-    "releaseId": 9941581,
-    "artist": "Vangie Coker",
-    "title": "The Music Is Gonna Get You",
-    "file": "B1-9941581.mp3",
-    "cover": "9941581.jpg"
-  },
-  {
-    "position": "B2",
     "releaseId": 1082282,
     "artist": "Ze Carlos",
-    "title": "Venha (Vhena Dub Bob One Remix)",
-    "file": "B2-1082282.mp3",
+    "title": "Venha (Remix)",
+    "file": "6706e9204c92c04e8a26815c.mp3",
     "cover": "1082282.jpg"
   },
   {
-    "position": "A",
-    "releaseId": 15884872,
-    "artist": "Analyse",
-    "title": "I Remember",
-    "file": "A-15884872.mp3",
-    "cover": "15884872.jpg"
+    "id": "6706c6f7d044a9c42fe8bec9",
+    "position": "B",
+    "releaseId": 3226371,
+    "artist": "Brenda And The Beach Balls",
+    "title": "B. Dancing Thru' The Night",
+    "file": "6706c6f7d044a9c42fe8bec9.mp3",
+    "cover": "3226371.jpg"
   },
   {
-    "position": "A",
-    "releaseId": 2730758,
-    "artist": "V.O.",
-    "title": "C'est Comme Ça L'été (Remix Version Longue)",
-    "file": "A-2730758.mp3",
-    "cover": "2730758.jpg"
-  },
-  {
-    "position": "A",
-    "releaseId": 1126147,
-    "artist": "Madeleine Uzho",
-    "title": "Satisfied (Extended Version)",
-    "file": "A-1126147.mp3",
-    "cover": "1126147.jpg"
-  },
-  {
-    "position": "A",
-    "releaseId": 1841914,
-    "artist": "Valric",
-    "title": "Valentino",
-    "file": "A-1841914.mp3",
-    "cover": "1841914.jpg"
-  },
-  {
-    "position": "A1",
-    "releaseId": 3159476,
-    "artist": "BMB",
-    "title": "Don't You Stop (Raido)",
-    "file": "A1-3159476.mp3",
-    "cover": "3159476.jpg"
-  },
-  {
-    "position": "A1",
-    "releaseId": 1635861,
-    "artist": "Labrys",
-    "title": "Fire",
-    "file": "A1-1635861.mp3",
-    "cover": "1635861.jpg"
-  },
-  {
-    "position": "A1",
-    "releaseId": 10131927,
-    "artist": "Various",
-    "title": "Imagine",
-    "file": "A1-10131927.mp3",
-    "cover": "10131927.jpg"
-  },
-  {
-    "position": "A1",
-    "releaseId": 7899345,
-    "artist": "Inside Out",
-    "title": "It Is So Dizzy",
-    "file": "A1-7899345.mp3",
-    "cover": "7899345.jpg"
-  },
-  {
-    "position": "A1",
-    "releaseId": 2132910,
-    "artist": "Walhalla",
-    "title": "Love Games",
-    "file": "A1-2132910.mp3",
-    "cover": "2132910.jpg"
-  },
-  {
-    "position": "A1",
-    "releaseId": 2916608,
-    "artist": "Obscure Desire",
-    "title": "Obscure Desire (English Radio Mix)",
-    "file": "A1-2916608.mp3",
-    "cover": "2916608.jpg"
-  },
-  {
-    "position": "A1",
-    "releaseId": 1283018,
-    "artist": "The Flamingos",
-    "title": "This Heat",
-    "file": "A1-1283018.mp3",
-    "cover": "1283018.jpg"
-  },
-  {
+    "id": "6706d653aaa83c044fea8c40",
     "position": "A1",
     "releaseId": 1436137,
     "artist": "John Rocca",
     "title": "X. Y. Zee",
-    "file": "A1-1436137.mp3",
+    "file": "6706d653aaa83c044fea8c40.mp3",
     "cover": "1436137.jpg"
   },
   {
+    "id": "6706d4d2aaa83c044fea8072",
+    "position": "A",
+    "releaseId": 1126147,
+    "artist": "Madeleine Uzho",
+    "title": "Satisfied (Extended Version)",
+    "file": "6706d4d2aaa83c044fea8072.mp3",
+    "cover": "1126147.jpg"
+  },
+  {
+    "id": "6706dbebccd91fe5b9741500",
+    "position": "A3",
+    "releaseId": 3547111,
+    "artist": "Merchant",
+    "title": "Symphony Of Love",
+    "file": "6706dbebccd91fe5b9741500.mp3",
+    "cover": "3547111.jpg"
+  },
+  {
+    "id": "6706e5854c92c04e8a266403",
+    "position": "B",
+    "releaseId": 16544664,
+    "artist": "Miss D.",
+    "title": "Moving (Do It Again- Mix)",
+    "file": "6706e5854c92c04e8a266403.mp3",
+    "cover": "16544664.jpg"
+  },
+  {
+    "id": "6706d939ccd91fe5b973ffda",
+    "position": "A1",
+    "releaseId": 1283018,
+    "artist": "The Flamingos",
+    "title": "This Heat",
+    "file": "6706d939ccd91fe5b973ffda.mp3",
+    "cover": "1283018.jpg"
+  },
+  {
+    "id": "6706e8d44c92c04e8a267fe1",
+    "position": "B2",
+    "releaseId": 4119923,
+    "artist": "Frances",
+    "title": "Surrender Your Love (Instrumental)",
+    "file": "6706e8d44c92c04e8a267fe1.mp3",
+    "cover": "4119923.jpg"
+  },
+  {
+    "id": "6706e6524c92c04e8a266bb7",
+    "position": "A3",
+    "releaseId": 1909228,
+    "artist": "Joy Ryder",
+    "title": "Bad",
+    "file": "6706e6524c92c04e8a266bb7.mp3",
+    "cover": "1909228.jpg"
+  },
+  {
+    "id": "6706b56c17b62d96ad758292",
+    "position": "A1",
+    "releaseId": 3022607,
+    "artist": "Jayfield Orchestra",
+    "title": "A1. Alambo",
+    "file": "6706b56c17b62d96ad758292.mp3",
+    "cover": "3022607.jpg"
+  },
+  {
+    "id": "6706e7634c92c04e8a267548",
+    "position": "A",
+    "releaseId": 13893931,
+    "artist": "Yvon Mora",
+    "title": "Tropique Du Cancer",
+    "file": "6706e7634c92c04e8a267548.mp3",
+    "cover": "13893931.jpg"
+  },
+  {
+    "id": "6706e6134c92c04e8a26693f",
+    "position": "A2",
+    "releaseId": 7299819,
+    "artist": "Dudu Araújo",
+    "title": "A2. Afronta",
+    "file": "6706e6134c92c04e8a26693f.mp3",
+    "cover": "7299819.jpg"
+  },
+  {
+    "id": "6706d549aaa83c044fea83f2",
+    "position": "A1",
+    "releaseId": 10131927,
+    "artist": "Various",
+    "title": "Imagine",
+    "file": "6706d549aaa83c044fea83f2.mp3",
+    "cover": "10131927.jpg"
+  },
+  {
+    "id": "6706d89dccd91fe5b973fc06",
+    "position": "A",
+    "releaseId": 1841914,
+    "artist": "Valric",
+    "title": "Valentino",
+    "file": "6706d89dccd91fe5b973fc06.mp3",
+    "cover": "1841914.jpg"
+  },
+  {
+    "id": "6706e8d94c92c04e8a267fff",
+    "position": "A",
+    "releaseId": 1676330,
+    "artist": "Westend 2",
+    "title": "Vergessen",
+    "file": "6706e8d94c92c04e8a267fff.mp3",
+    "cover": "1676330.jpg"
+  },
+  {
+    "id": "6706d97dccd91fe5b974019d",
+    "position": "A1",
+    "releaseId": 3159476,
+    "artist": "BMB",
+    "title": "Don't You Stop (Raido)",
+    "file": "6706d97dccd91fe5b974019d.mp3",
+    "cover": "3159476.jpg"
+  },
+  {
+    "id": "6706e80e4c92c04e8a267a63",
     "position": "A12",
     "releaseId": 13320870,
     "artist": "Labeo Synthesis",
     "title": "Club Méditerranée _ Le Disque",
-    "file": "A12-13320870.mp3",
+    "file": "6706e80e4c92c04e8a267a63.mp3",
     "cover": "13320870.jpg"
   },
   {
+    "id": "6706d515aaa83c044fea825d",
+    "position": "A1",
+    "releaseId": 7899345,
+    "artist": "Inside Out",
+    "title": "It Is So Dizzy",
+    "file": "6706d515aaa83c044fea825d.mp3",
+    "cover": "7899345.jpg"
+  },
+  {
+    "id": "6706d54eaaa83c044fea8425",
+    "position": "A1",
+    "releaseId": 1635861,
+    "artist": "Labrys",
+    "title": "Fire",
+    "file": "6706d54eaaa83c044fea8425.mp3",
+    "cover": "1635861.jpg"
+  },
+  {
+    "id": "6706e7184c92c04e8a26726e",
+    "position": "B",
+    "releaseId": 7535866,
+    "artist": "Avant Garde",
+    "title": "Everybody's Lover",
+    "file": "6706e7184c92c04e8a26726e.mp3",
+    "cover": "7535866.jpg"
+  },
+  {
+    "id": "6706dbafccd91fe5b97412db",
+    "position": "A2",
+    "releaseId": 2771807,
+    "artist": "Lisa Williamson",
+    "title": "So In Love With You (Instrumental)",
+    "file": "6706dbafccd91fe5b97412db.mp3",
+    "cover": "2771807.jpg"
+  },
+  {
+    "id": "6706e8244c92c04e8a267b36",
+    "position": "A2",
+    "releaseId": 10998342,
+    "artist": "Alston & The Fremantle Doctor",
+    "title": "Dreamtime Trance",
+    "file": "6706e8244c92c04e8a267b36.mp3",
+    "cover": "10998342.jpg"
+  },
+  {
+    "id": "6706dbffccd91fe5b97415c6",
+    "position": "A",
+    "releaseId": 15884872,
+    "artist": "Analyse",
+    "title": "I Remember",
+    "file": "6706dbffccd91fe5b97415c6.mp3",
+    "cover": "15884872.jpg"
+  },
+  {
+    "id": "6706d5b3aaa83c044fea86c9",
+    "position": "A1",
+    "releaseId": 2132910,
+    "artist": "Walhalla",
+    "title": "Love Games",
+    "file": "6706d5b3aaa83c044fea86c9.mp3",
+    "cover": "2132910.jpg"
+  },
+  {
+    "id": "672a178346c981abf8f7718e",
+    "position": "B",
+    "releaseId": 29195605,
+    "artist": "David Steele (7)",
+    "title": "Indian (Instrumental)",
+    "file": "672a178346c981abf8f7718e.mp3",
+    "cover": "29195605.jpg"
+  },
+  {
+    "id": "6706e6df4c92c04e8a267082",
+    "position": "B",
+    "releaseId": 2663482,
+    "artist": "Lisa King",
+    "title": "You've Got Magic",
+    "file": "6706e6df4c92c04e8a267082.mp3",
+    "cover": "2663482.jpg"
+  },
+  {
+    "id": "6706db9cccd91fe5b97411fd",
+    "position": "A",
+    "releaseId": 2730758,
+    "artist": "V.O.",
+    "title": "C'est Comme Ça L'été (Remix Version Longue)",
+    "file": "6706db9cccd91fe5b97411fd.mp3",
+    "cover": "2730758.jpg"
+  },
+  {
+    "id": "6706e8e74c92c04e8a26800d",
+    "position": "A1",
+    "releaseId": 6230001,
+    "artist": "Sound Revolution",
+    "title": "Stay",
+    "file": "6706e8e74c92c04e8a26800d.mp3",
+    "cover": "6230001.jpg"
+  },
+  {
+    "id": "6706e8ce4c92c04e8a267fb1",
+    "position": "B1",
+    "releaseId": 7416772,
+    "artist": "Almir",
+    "title": "Santa Glória",
+    "file": "6706e8ce4c92c04e8a267fb1.mp3",
+    "cover": "7416772.jpg"
+  },
+  {
+    "id": "6706d491aaa83c044fea7e6f",
+    "position": "A1",
+    "releaseId": 2916608,
+    "artist": "Obscure Desire",
+    "title": "Obscure Desire (English Radio Mix)",
+    "file": "6706d491aaa83c044fea7e6f.mp3",
+    "cover": "2916608.jpg"
+  },
+  {
+    "id": "6706e7984c92c04e8a2676b5",
+    "position": "B",
+    "releaseId": 915967,
+    "artist": "Trancefeld",
+    "title": "Love Song",
+    "file": "6706e7984c92c04e8a2676b5.mp3",
+    "cover": "915967.jpg"
+  },
+  {
+    "id": "6706e89e4c92c04e8a267ec5",
+    "position": "B",
+    "releaseId": 2218569,
+    "artist": "George Martin",
+    "title": "Back Gammon (Instrumental)",
+    "file": "6706e89e4c92c04e8a267ec5.mp3",
+    "cover": "2218569.jpg"
+  },
+  {
+    "id": "6706e9204c92c04e8a268162",
+    "position": "B2",
+    "releaseId": 1082282,
+    "artist": "Ze Carlos",
+    "title": "Venha (Vhena Dub Bob One Remix)",
+    "file": "6706e9204c92c04e8a268162.mp3",
+    "cover": "1082282.jpg"
+  },
+  {
+    "id": "6706d846ccd91fe5b973f9ab",
     "position": "B",
     "releaseId": 3914674,
     "artist": "Bon Rivage",
     "title": "Genf (Instrumental-Suicide-Mix)",
-    "file": "B-3914674.mp3",
+    "file": "6706d846ccd91fe5b973f9ab.mp3",
     "cover": "3914674.jpg"
   },
   {
+    "id": "6706e8a54c92c04e8a267ef8",
+    "position": "B2",
+    "releaseId": 1473292,
+    "artist": "Claudia",
+    "title": "Hold On (Instrumental)",
+    "file": "6706e8a54c92c04e8a267ef8.mp3",
+    "cover": "1473292.jpg"
+  },
+  {
+    "id": "6706e5434c92c04e8a26624f",
+    "position": "A",
+    "releaseId": 3222202,
+    "artist": "Disfida",
+    "title": "Back To Reality",
+    "file": "6706e5434c92c04e8a26624f.mp3",
+    "cover": "3222202.jpg"
+  },
+  {
+    "id": "6706df0d3d5c8ab2b98b443c",
+    "position": "B1",
+    "releaseId": 9941581,
+    "artist": "Vangie Coker",
+    "title": "The Music Is Gonna Get You",
+    "file": "6706df0d3d5c8ab2b98b443c.mp3",
+    "cover": "9941581.jpg"
+  },
+  {
+    "id": "6706e6f04c92c04e8a267113",
+    "position": "B",
+    "releaseId": 12754764,
+    "artist": "Mango Groove",
+    "title": "Telephone Lover",
+    "file": "6706e6f04c92c04e8a267113.mp3",
+    "cover": "12754764.jpg"
+  },
+  {
+    "id": "6706c5e1d044a9c42fe8b272",
+    "position": "A",
+    "releaseId": 2721383,
+    "artist": "Afubi",
+    "title": "A. Bit Of Your Love",
+    "file": "6706c5e1d044a9c42fe8b272.mp3",
+    "cover": "2721383.jpg"
+  },
+  {
+    "id": "6706e2ae4c92c04e8a264982",
+    "position": "A2",
+    "releaseId": 167399,
+    "artist": "Bill Nelson",
+    "title": "Familiar Spirit",
+    "file": "6706e2ae4c92c04e8a264982.mp3",
+    "cover": "167399.jpg"
+  },
+  {
+    "id": "6706d496aaa83c044fea7e99",
     "position": "B",
     "releaseId": 8584503,
     "artist": "Ged Bogen",
     "title": "Jump Out Of The Fiying-Pan",
-    "file": "B-8584503.mp3",
+    "file": "6706d496aaa83c044fea7e99.mp3",
     "cover": "8584503.jpg"
   },
   {
+    "id": "6706d9ecccd91fe5b97404c1",
     "position": "A",
     "releaseId": 14528366,
     "artist": "Cherry Pondy",
     "title": "Amour Au Reggae",
-    "file": "A-14528366.mp3",
+    "file": "6706d9ecccd91fe5b97404c1.mp3",
     "cover": "14528366.jpg"
   }
 ]

@@ -85,16 +85,25 @@ Each track entry should include at least:
 
 ```json
 {
+  "id": "6706e9204c92c04e8a26815c",
   "position": "A2",
   "releaseId": 7299819,
   "artist": "Dudu Araujo",
   "title": "A2. Afronta",
-  "file": "A2-7299819.mp3",
+  "file": "6706e9204c92c04e8a26815c.mp3",
   "cover": "7299819.jpg"
 }
 ```
 
-The `file` value must exactly match the MPD filename. If MPD is playing `A2-7299819.mp3`, `/nowplaying` looks for `"file": "A2-7299819.mp3"` in `tracks.json`.
+MP3 files are named from `id`:
+
+```text
+mpd/music/<id>.mp3
+```
+
+If MPD is playing `6706e9204c92c04e8a26815c.mp3`, `/nowplaying` strips `.mp3` and looks for `"id": "6706e9204c92c04e8a26815c"` in `tracks.json`.
+
+On every MPD container start, `mpd/start.sh` reads `tracks.json`, generates `mpd/playlists/tracks.m3u`, and loads it with `mpc load tracks`. This preserves the exact order of the `tracks.json` array. `random` is disabled and `repeat` is enabled.
 
 The response always returns JSON. If there is no stream, an invalid title, or an unknown release id, the response uses `status` values such as `no_source`, `invalid_title`, or `release_not_found` instead of hanging.
 

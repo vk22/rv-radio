@@ -14,10 +14,12 @@ services:
     image: vimagick/mpd
     container_name: mpd
     depends_on:
-      - icecast
+      icecast:
+        condition: service_started
     volumes:
       - ./mpd/start.sh:/start.sh:ro
       - ./mpd/mpd.conf:/etc/mpd.conf:ro
+      - ./backend/data/tracks.json:/tracks.json:ro
       - ./mpd/music:/music:ro
       - ./mpd/playlists:/playlists
       - ./mpd/data:/var/lib/mpd
