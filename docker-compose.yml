@@ -11,19 +11,21 @@ services:
       - ./icecast/admin:/usr/share/icecast2/admin:ro
 
   mpd:
-    image: vimagick/mpd
+    build: ./mpd
     container_name: mpd
     depends_on:
       icecast:
         condition: service_started
     volumes:
-      - ./mpd/start.sh:/start.sh:ro
-      - ./mpd/mpd.conf:/etc/mpd.conf:ro
-      - ./backend/data/tracks.json:/tracks.json:ro
+      - ./backend/data/channels.json:/channels.json:ro
+      - ./backend/data/channels:/channels:ro
       - ./mpd/music:/music:ro
       - ./mpd/playlists:/playlists
       - ./mpd/data:/var/lib/mpd
-    command: ["/start.sh"]
+    environment:
+      ICECAST_HOST: icecast
+      ICECAST_PORT: 8001
+      ICECAST_SOURCE_PASSWORD: sourcepass
     restart: unless-stopped
 
   backend:
@@ -36,7 +38,7 @@ services:
     environment:
       ICECAST_URL: ${ICECAST_URL:-http://icecast:8001/status-json.xsl}
       MPD_HOST: ${MPD_HOST:-mpd}
-      MPD_PORT: ${MPD_PORT:-6600}
+      STREAM_BASE_URL: ${STREAM_BASE_URL:-http://localhost:8001}
       PORT: ${PORT:-3001}
     ports:
       - "3001:3001"
@@ -51,7 +53,8 @@ services:
       - /app/node_modules
     environment:
       VITE_API_URL: ${VITE_API_URL:-http://localhost:3001}
-      VITE_STREAM_URL: ${VITE_STREAM_URL:-http://localhost:8001/radio.mp3}
+      VITE_STREAM_BASE_URL: ${VITE_STREAM_BASE_URL:-http://localhost:8001}
+      VITE_STREAM_URL: ${VITE_STREAM_URL:-http://localhost:8001/main.mp3}
     ports:
       - "5500:5500"
     depends_on:

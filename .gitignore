@@ -1,7 +1,8 @@
+.DS_Store
 mpd/music/
 icecast/logs/
 mpd/data/
 mpd/playlists/
-frontend/public/covers
+frontend/public/covers/
 node_modules/
 frontend/dist/

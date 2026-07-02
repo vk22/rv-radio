@@ -4,9 +4,9 @@ Local radio stack with MPD, Icecast, an Express metadata API, and a Vue/Vite fro
 
 ## Services
 
-- `icecast`: receives the MPD stream and exposes `/radio.mp3` plus status endpoints.
-- `mpd`: scans `mpd/music`, plays tracks, and streams them to Icecast.
-- `backend`: reads `status-json.xsl`, matches the current release id against `backend/data/forSale.json`, and exposes `/nowplaying`.
+- `icecast`: receives MPD streams and exposes channel mountpoints plus status endpoints.
+- `mpd`: radio manager that starts one MPD process per enabled channel in `backend/data/channels.json`.
+- `backend`: reads `status-json.xsl`, asks MPD for the current file, matches it against the channel `tracks.json`, and exposes `/nowplaying`.
 - `frontend`: plays the stream and renders current release data.
 
 ## Local Development
@@ -28,7 +28,7 @@ Useful endpoints:
 ```text
 http://localhost:3001/nowplaying
 http://localhost:8001/status-json.xsl
-http://localhost:8001/radio.mp3
+http://localhost:8001/main.mp3
 ```
 
 The Docker Compose setup is configured for development:
@@ -54,13 +54,14 @@ cp .env.example .env
 Frontend variables:
 
 - `VITE_API_URL`: backend URL used by the browser. Default: `http://localhost:3001`.
-- `VITE_STREAM_URL`: Icecast stream URL used by the browser. Default: `http://localhost:8001/radio.mp3`.
+- `VITE_STREAM_BASE_URL`: Icecast stream base URL used by the browser. Default: `http://localhost:8001`.
+- `VITE_STREAM_URL`: legacy single-stream URL fallback. Prefer `VITE_STREAM_BASE_URL`.
 
 Backend variables:
 
 - `ICECAST_URL`: Icecast status JSON URL from the backend container. Default: `http://icecast:8001/status-json.xsl`.
 - `MPD_HOST`: MPD host from the backend container. Default: `mpd`.
-- `MPD_PORT`: MPD port. Default: `6600`.
+- `STREAM_BASE_URL`: public Icecast stream base URL returned by the API. Default: `http://localhost:8001`.
 - `PORT`: backend port. Default: `3001`.
 
 ## Music
@@ -68,17 +69,66 @@ Backend variables:
 Put playable audio files in:
 
 ```text
-mpd/music/
+mpd/music/<channelId>/
 ```
 
-This directory is gitignored. MPD scans it on container start via `mpd/start.sh`, enables random/repeat, and starts playback.
+For the default channel:
+
+```text
+mpd/music/main/
+```
+
+This directory is gitignored. MP3 files are named from track ids in the channel `tracks.json`: `{id}.mp3`.
+
+## Channels
+
+Channels live in:
+
+```text
+backend/data/channels.json
+```
+
+Example:
+
+```json
+{
+  "id": "main",
+  "name": "Main Radio",
+  "enabled": true,
+  "mount": "/main.mp3",
+  "mpdPort": 6600
+}
+```
+
+Each enabled channel starts a separate MPD process and streams to Icecast at its `mount`. With nginx proxying `/stream/` to Icecast, channel URLs become:
+
+```text
+https://skyharp.live/stream/main.mp3
+https://skyharp.live/stream/second.mp3
+```
+
+Admin UI:
+
+```text
+http://localhost:5500/admin
+```
+
+The admin creates and updates channel records. For each channel, keep its media data in matching directories:
+
+```text
+backend/data/channels/<channelId>/tracks.json
+mpd/music/<channelId>/*.mp3
+frontend/public/covers/<channelId>/*.jpg
+```
+
+If MPD logs `Failed to access /music/<channelId>`, create that folder and put the channel MP3 files there. The stream mount can exist in `channels.json`, but Icecast will not receive audio until MPD can read files from `mpd/music/<channelId>/`.
 
 ## Metadata Format
 
 `/nowplaying` asks MPD for the current file and then finds that file in:
 
 ```text
-backend/data/tracks.json
+backend/data/channels/<channelId>/tracks.json
 ```
 
 Each track entry should include at least:
@@ -98,24 +148,24 @@ Each track entry should include at least:
 MP3 files are named from `id`:
 
 ```text
-mpd/music/<id>.mp3
+mpd/music/<channelId>/<id>.mp3
 ```
 
 If MPD is playing `6706e9204c92c04e8a26815c.mp3`, `/nowplaying` strips `.mp3` and looks for `"id": "6706e9204c92c04e8a26815c"` in `tracks.json`.
 
-On every MPD container start, `mpd/start.sh` reads `tracks.json`, generates `mpd/playlists/tracks.m3u`, and loads it with `mpc load tracks`. This preserves the exact order of the `tracks.json` array. `random` is disabled and `repeat` is enabled.
+On every MPD manager start or channel `tracks.json` change, the manager generates `mpd/playlists/<channelId>.m3u` and loads it with `mpc load <channelId>`. This preserves the exact order of the channel `tracks.json` array. `random` is disabled and `repeat` is enabled.
 
-The response always returns JSON. If there is no stream, an invalid title, or an unknown release id, the response uses `status` values such as `no_source`, `invalid_title`, or `release_not_found` instead of hanging.
+The response always returns JSON. If there is no current MPD file or no matching track, the response uses `status` values such as `no_current_file` or `track_not_found` instead of hanging.
 
 ## Covers
 
 Optional local cover files can be placed in:
 
 ```text
-frontend/public/covers/<releaseID>.jpg
+frontend/public/covers/<channelId>/<releaseID>.jpg
 ```
 
-`frontend/public/covers` is gitignored. The cover filename comes from the `cover` field in `tracks.json`.
+`frontend/public/covers` is gitignored. The cover filename comes from the `cover` field in the channel `tracks.json`.
 
 ## Common Checks
 
@@ -135,5 +185,5 @@ If the Icecast HTML status page has XSLT issues, the app can still work as long 
 
 ```text
 http://localhost:8001/status-json.xsl
-http://localhost:8001/radio.mp3
+http://localhost:8001/main.mp3
 ```

@@ -1,24 +1,61 @@
 <template>
   <div class="pb-8" ref="main">
+    <div class="mb-4 flex justify-center" v-if="channels.length > 1">
+      <div class="bg-white/10 pl-1 pr-2 py-2 rounded-full">
+        <select
+          class="text-sm text-white outline-none px-2"
+          v-model="selectedChannelId"
+          @change="changeChannel"
+        >
+          <option
+            class="text-black"
+            v-for="channel in channels"
+            :key="channel.id"
+            :value="channel.id"
+          >
+            {{ channel.name }}
+          </option>
+        </select>
+      </div>
+    </div>
     <div class="relative z-[99] mt-8 w-[300px] max-w-full">
       <AnimatedComponent delay="250" animation-type="slideup">
         <!-- <div class="flex w-full justify-center text-[0.7rem] font-semibold uppercase tracking-[1px] text-[#555]">Now playing</div> -->
-        <div class="absolute top-[0px] z-[999] flex h-[400px] w-full justify-center pt-[45%]">
+        <div
+          class="absolute top-[0px] z-[999] flex h-[400px] w-full justify-center pt-[45%]"
+        >
           <div
             class="cursor-pointer transition-opacity duration-150 ease-in-out hover:opacity-[0.85]"
             v-if="!playing && !loading"
             @click="play"
             :class="{ 'opacity-50': loading }"
           >
-            <Play class="h-[80px] w-[70px] fill-white text-white opacity-90" :stroke-width="0" />
+            <Play
+              class="h-[80px] w-[70px] fill-white text-white opacity-90"
+              :stroke-width="0"
+            />
           </div>
-          <div class="cursor-pointer transition-opacity duration-150 ease-in-out hover:opacity-[0.85]" v-if="playing" @click="pause">
-            <Pause class="h-[80px] w-14 fill-white text-white opacity-90" :stroke-width="0" />
+          <div
+            class="cursor-pointer transition-opacity duration-150 ease-in-out hover:opacity-[0.85]"
+            v-if="playing"
+            @click="pause"
+          >
+            <Pause
+              class="h-[80px] w-14 fill-white text-white opacity-90"
+              :stroke-width="0"
+            />
           </div>
-          <div class="cursor-pointer transition-opacity duration-150 ease-in-out hover:opacity-[0.85] pt-2" v-if="loading">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="60px">
+          <div
+            class="cursor-pointer transition-opacity duration-150 ease-in-out hover:opacity-[0.85] pt-2"
+            v-if="loading"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 200 200"
+              width="60px"
+            >
               <radialGradient
-                id="a12"
+                :id="loadingGradientId"
                 cx=".66"
                 fx=".66"
                 cy=".3125"
@@ -34,7 +71,7 @@
               <circle
                 transform-origin="center"
                 fill="none"
-                stroke="url(#a12)"
+                :stroke="`url(#${loadingGradientId})`"
                 stroke-width="10"
                 stroke-linecap="round"
                 stroke-dasharray="200 1000"
@@ -70,7 +107,12 @@
         </div>
         <ProjectItem :link="currentItem.link">
           <template #image>
-            <img v-if="currentItem.imageUrl" :src="currentItem.imageUrl" alt="" @error="useFallbackImage" />
+            <img
+              v-if="currentItem.imageUrl"
+              :src="currentItem.imageUrl"
+              alt=""
+              @error="useFallbackImage"
+            />
           </template>
           <template #title>{{ currentItem.title }}</template>
           <template #artist>{{ currentItem.artist }}</template>
@@ -80,13 +122,12 @@
   </div>
 </template>
 
-
 <script setup>
-import { onBeforeUnmount, onMounted, ref } from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import { Howl, Howler } from "howler";
-import { Pause, Play } from 'lucide-vue-next';
-import AnimatedComponent from './AnimatedComponent.vue';
-import ProjectItem from './ProjectItem.vue'
+import { Pause, Play } from "lucide-vue-next";
+import AnimatedComponent from "./AnimatedComponent.vue";
+import ProjectItem from "./ProjectItem.vue";
 // import gsap from 'gsap-trial';
 // import { ScrollTrigger } from 'gsap-trial/ScrollTrigger';
 // import { ScrollSmoother } from 'gsap-trial/ScrollSmoother';
@@ -104,12 +145,42 @@ const currentItem = ref({
 });
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001";
-const STREAM_URL = import.meta.env.VITE_STREAM_URL || "http://localhost:8001/radio.mp3";
+const STREAM_BASE_URL =
+  import.meta.env.VITE_STREAM_BASE_URL ||
+  (import.meta.env.VITE_STREAM_URL || "http://localhost:8001/main.mp3").replace(
+    /\/[^/]*$/,
+    "",
+  );
+const channels = ref([]);
+const selectedChannelId = ref("main");
+const loadingGradientId = `loading-${Math.random().toString(36).slice(2)}`;
 let trackInterval;
+
+const selectedChannel = computed(() =>
+  channels.value.find((channel) => channel.id === selectedChannelId.value),
+);
+const currentStreamUrl = computed(() => {
+  const mount =
+    selectedChannel.value?.mount || `/${selectedChannelId.value}.mp3`;
+  return `${STREAM_BASE_URL.replace(/\/$/, "")}${mount.startsWith("/") ? mount : `/${mount}`}`;
+});
+
+const fetchChannels = async () => {
+  try {
+    const res = await fetch(`${API_URL}/channels`);
+    const data = await res.json();
+    channels.value = data.data.filter((channel) => channel.enabled);
+    selectedChannelId.value = channels.value[0]?.id || "main";
+  } catch (err) {
+    console.error("Failed to fetch channels", err);
+  }
+};
 
 const fetchTrack = async () => {
   try {
-    const res = await fetch(`${API_URL}/nowplaying`);
+    const res = await fetch(
+      `${API_URL}/channels/${selectedChannelId.value}/nowplaying`,
+    );
     const data = await res.json();
     if (data.title) {
       currentItem.value = data;
@@ -117,6 +188,12 @@ const fetchTrack = async () => {
   } catch (err) {
     console.error("Failed to fetch current track", err);
   }
+};
+
+const changeChannel = async () => {
+  stop();
+  await fetchTrack();
+  play()
 };
 
 const useFallbackImage = () => {
@@ -142,7 +219,7 @@ const play = (index) => {
   let track = {
     freq: "81.4",
     title: "Revibed Radio",
-    src: STREAM_URL,
+    src: currentStreamUrl.value,
     howl: null,
   };
 
@@ -183,16 +260,14 @@ const stop = (index) => {
   //this.$store.commit('player/setPlaying', false)
 };
 
-
 onMounted(() => {
-  fetchTrack();
+  fetchChannels().then(fetchTrack);
   trackInterval = setInterval(fetchTrack, 5000);
 });
 
 onBeforeUnmount(() => {
   clearInterval(trackInterval);
 });
-
 
 // const main = ref();
 // let smoother;
@@ -235,10 +310,7 @@ onBeforeUnmount(() => {
 //     .addLabel('start')
 //     .from('.circle', { scale: 0.3, rotation: 45, autoAlpha: 0 })
 
-
-
 //   }, main.value);
-//   // 
+//   //
 // });
-
 </script>
