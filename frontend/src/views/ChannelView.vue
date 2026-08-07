@@ -1,6 +1,6 @@
 <template>
   <main v-if="channel" class="grid h-full grid-cols-2 bg-[linear-gradient(145deg,var(--accent),#050505_72%)] max-[900px]:block max-[900px]:h-auto max-[900px]:min-h-full max-[900px]:overflow-y-auto" :style="{ '--accent': channel.accentColor }">
-    <section class="flex min-w-0 flex-col justify-between  p-[clamp(32px,4.5vw,88px)] max-[900px]:min-h-[calc(100dvh-70px)] max-[900px]:gap-16">
+    <section class="flex min-w-0 flex-col justify-between  p-[clamp(24px,4.5vw,48px)] max-[900px]:min-h-[calc(100dvh-70px)] max-[900px]:gap-16">
       <RouterLink to="/" class="self-start font-mono text-xs text-[#aaa]">← All channels</RouterLink>
       <div>
         <h1 class="max-w-[10ch] text-[clamp(64px,9.2vw,182px)] font-semibold leading-[0.88] tracking-[0.001px]">{{ channel.name }}</h1>
