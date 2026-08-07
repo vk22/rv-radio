@@ -111,6 +111,8 @@ mpd/music/<channelId>/*.mp3
 frontend/public/covers/<channelId>/*.jpg
 ```
 
+When a channel is created, backend automatically creates its empty `tracks.json` and `mpd/music/<channelId>/` directory. Existing channel directories are also checked and created on backend startup.
+
 If MPD logs `Failed to access /music/<channelId>`, create that folder and put the channel MP3 files there. The database record can exist without audio, but Icecast will not receive a stream until MPD can read files from `mpd/music/<channelId>/`.
 
 ## Metadata Format

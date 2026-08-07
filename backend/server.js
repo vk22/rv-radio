@@ -27,6 +27,7 @@ const PORT = process.env.PORT || 3001;
 const ICECAST_URL = process.env.ICECAST_URL || "http://icecast:8001/status-json.xsl";
 const MPD_HOST = process.env.MPD_HOST || "mpd";
 const DEFAULT_STREAM_BASE_URL = process.env.STREAM_BASE_URL || "http://localhost:8001";
+const MUSIC_DIR = process.env.MUSIC_DIR || "/music";
 const DATA_DIR = new URL("./data/", import.meta.url);
 
 const EMPTY_NOW_PLAYING = {
@@ -66,9 +67,10 @@ const writeJson = async (fileName, data) => {
 
 const readTracks = (channelId) => readJson(`channels/${channelId}/tracks.json`, []);
 
-const ensureChannelTracks = async (channelId) => {
+const ensureChannelStorage = async (channelId) => {
   const tracksPath = `channels/${channelId}/tracks.json`;
   await fs.promises.mkdir(getDataUrl(`channels/${channelId}/`), { recursive: true, mode: 0o755 });
+  await fs.promises.mkdir(`${MUSIC_DIR}/${channelId}`, { recursive: true, mode: 0o755 });
 
   try {
     await fs.promises.access(getDataUrl(tracksPath));
@@ -428,7 +430,7 @@ app.post("/admin/channels", async (req, res) => {
         channel.enabled, channel.mount, channel.mpdPort, channel.trackIds ? JSON.stringify(channel.trackIds) : null,
         channel.sortOrder],
     );
-    await ensureChannelTracks(channel.id);
+    await ensureChannelStorage(channel.id);
     res.status(201).json({ data: channel, applyAutomatically: true });
   } catch (error) {
     if (error.code === "23505") return res.status(409).json({ error: "Channel id, mount or MPD port already exists" });
@@ -477,4 +479,5 @@ app.use((error, _req, res, _next) => {
 });
 
 await migrate();
+for (const channel of await readChannels()) await ensureChannelStorage(channel.id);
 app.listen(PORT, () => console.log(`Backend running on http://localhost:${PORT}`));

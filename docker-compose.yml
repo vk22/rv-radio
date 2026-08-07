@@ -53,6 +53,7 @@ services:
       - ./backend/db.js:/app/db.js:ro
       - ./backend/migrations:/app/migrations:ro
       - ./backend/data:/app/data
+      - ./mpd/music:/music
     command: ["npm", "run", "dev"]
     environment:
       ICECAST_URL: ${ICECAST_URL:-http://icecast:8001/status-json.xsl}
@@ -61,6 +62,7 @@ services:
       DATABASE_URL: ${DATABASE_URL:-postgres://skyharp:skyharp@postgres:5432/skyharp}
       FRONTEND_URL: ${FRONTEND_URL:-http://localhost:5500}
       NODE_ENV: ${NODE_ENV:-development}
+      MUSIC_DIR: /music
       PORT: ${PORT:-3001}
     ports:
       - "3001:3001"
