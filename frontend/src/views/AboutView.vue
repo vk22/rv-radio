@@ -1,4 +1,4 @@
 <template>
-  <main class="min-h-screen text-white">
+  <main class="h-full min-h-screen w-full text-white">
   </main>
 </template>

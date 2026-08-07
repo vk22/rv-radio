@@ -1,7 +1,20 @@
 services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-skyharp}
+      POSTGRES_USER: ${POSTGRES_USER:-skyharp}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-skyharp}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-skyharp} -d ${POSTGRES_DB:-skyharp}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
   icecast:
     image: moul/icecast
-    container_name: icecast
     ports:
       - "8001:8001"
     volumes:
@@ -12,12 +25,12 @@ services:
 
   mpd:
     build: ./mpd
-    container_name: mpd
     depends_on:
       icecast:
         condition: service_started
+      backend:
+        condition: service_started
     volumes:
-      - ./backend/data/channels.json:/channels.json:ro
       - ./backend/data/channels:/channels:ro
       - ./mpd/music:/music:ro
       - ./mpd/playlists:/playlists
@@ -26,28 +39,39 @@ services:
       ICECAST_HOST: icecast
       ICECAST_PORT: 8001
       ICECAST_SOURCE_PASSWORD: sourcepass
+      CHANNELS_URL: http://backend:3001/channels
     restart: unless-stopped
 
   backend:
     build: ./backend
-    container_name: backend
+    # Use the host rvradio UID/GID so files created in the bind mount are not
+    # owned by root. Set these values from `id -u rvradio` / `id -g rvradio`.
+    user: "${BACKEND_UID:-1000}:${BACKEND_GID:-1000}"
     volumes:
-      - ./backend:/app
-      - /app/node_modules
+      - ./backend/server.js:/app/server.js:ro
+      - ./backend/auth.js:/app/auth.js:ro
+      - ./backend/db.js:/app/db.js:ro
+      - ./backend/migrations:/app/migrations:ro
+      - ./backend/data:/app/data
     command: ["npm", "run", "dev"]
     environment:
       ICECAST_URL: ${ICECAST_URL:-http://icecast:8001/status-json.xsl}
       MPD_HOST: ${MPD_HOST:-mpd}
       STREAM_BASE_URL: ${STREAM_BASE_URL:-http://localhost:8001}
+      DATABASE_URL: ${DATABASE_URL:-postgres://skyharp:skyharp@postgres:5432/skyharp}
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:5500}
+      NODE_ENV: ${NODE_ENV:-development}
       PORT: ${PORT:-3001}
     ports:
       - "3001:3001"
     depends_on:
-      - icecast
+      icecast:
+        condition: service_started
+      postgres:
+        condition: service_healthy
 
   frontend:
     build: ./frontend
-    container_name: frontend
     volumes:
       - ./frontend:/app
       - /app/node_modules
@@ -59,3 +83,6 @@ services:
       - "5500:5500"
     depends_on:
       - backend
+
+volumes:
+  postgres_data:

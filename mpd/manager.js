@@ -2,7 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const { spawn } = require("child_process");
 
-const CHANNELS_PATH = "/channels.json";
+const CHANNELS_URL = process.env.CHANNELS_URL || "http://backend:3001/channels";
 const MUSIC_DIR = "/music";
 const PLAYLIST_DIR = "/playlists";
 const RUNTIME_DIR = "/var/lib/mpd";
@@ -14,6 +14,8 @@ const ICECAST_SOURCE_PASSWORD = process.env.ICECAST_SOURCE_PASSWORD || "sourcepa
 let children = [];
 let restartTimer;
 let watchedTrackFiles = new Set();
+let channelsSignature = "";
+let restartQueue = Promise.resolve();
 
 const readJson = (filePath, fallback) => {
   try {
@@ -44,6 +46,13 @@ const normalizeChannel = (channel, index) => {
     mpdPort: Number.parseInt(channel.mpdPort || 6600 + index, 10),
     trackIds: Array.isArray(channel.trackIds) ? channel.trackIds : undefined,
   };
+};
+
+const fetchChannels = async () => {
+  const response = await fetch(CHANNELS_URL);
+  if (!response.ok) throw new Error(`Channels API responded with ${response.status}`);
+  const payload = await response.json();
+  return payload.data.map(normalizeChannel);
 };
 
 const ensureDir = (dir) => {
@@ -124,14 +133,16 @@ const stopChildren = async () => {
   children = [];
 };
 
-const start = async () => {
+const start = async (providedChannels) => {
   await stopChildren();
 
-  const channels = readJson(CHANNELS_PATH, []).map(normalizeChannel).filter((channel) => channel.enabled);
+  const allChannels = providedChannels || await fetchChannels();
+  if (!providedChannels) channelsSignature = JSON.stringify(allChannels);
+  const channels = allChannels.filter((channel) => channel.enabled);
   watchTrackFiles(channels);
 
   if (!channels.length) {
-    console.warn("No enabled channels. Waiting for channels.json changes.");
+    console.warn("No enabled channels. Waiting for channel changes.");
     return;
   }
 
@@ -158,10 +169,30 @@ const start = async () => {
   }
 };
 
+const queueStart = (channels) => {
+  restartQueue = restartQueue
+    .then(() => start(channels))
+    .catch((err) => console.error("Failed to restart channels:", err));
+  return restartQueue;
+};
+
+const pollChannels = async () => {
+  try {
+    const channels = await fetchChannels();
+    const nextSignature = JSON.stringify(channels);
+    if (nextSignature !== channelsSignature) {
+      channelsSignature = nextSignature;
+      await queueStart(channels);
+    }
+  } catch (err) {
+    console.error("Failed to poll channels:", err.message);
+  }
+};
+
 const scheduleRestart = () => {
   clearTimeout(restartTimer);
   restartTimer = setTimeout(() => {
-    start().catch((err) => console.error("Failed to restart channels:", err));
+    queueStart();
   }, 1000);
 };
 
@@ -183,14 +214,11 @@ const watchTrackFiles = (channels) => {
   watchedTrackFiles = nextTrackFiles;
 };
 
-fs.watchFile(CHANNELS_PATH, { interval: 2000 }, scheduleRestart);
+setInterval(pollChannels, 2000);
 
 process.on("SIGTERM", async () => {
   await stopChildren();
   process.exit(0);
 });
 
-start().catch((err) => {
-  console.error("Failed to start radio manager:", err);
-  process.exit(1);
-});
+queueStart();

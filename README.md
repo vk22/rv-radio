@@ -5,7 +5,7 @@ Local radio stack with MPD, Icecast, an Express metadata API, and a Vue/Vite fro
 ## Services
 
 - `icecast`: receives MPD streams and exposes channel mountpoints plus status endpoints.
-- `mpd`: radio manager that starts one MPD process per enabled channel in `backend/data/channels.json`.
+- `mpd`: radio manager that reads channel configuration from the backend API and starts one MPD process per enabled channel.
 - `backend`: reads `status-json.xsl`, asks MPD for the current file, matches it against the channel `tracks.json`, and exposes `/nowplaying`.
 - `frontend`: plays the stream and renders current release data.
 
@@ -34,8 +34,7 @@ http://localhost:8001/main.mp3
 The Docker Compose setup is configured for development:
 
 - `frontend` mounts `./frontend:/app` and runs Vite, so Vue changes hot reload.
-- `backend` mounts `./backend:/app` and runs `node --watch`, so API changes restart automatically.
-- anonymous `/app/node_modules` volumes keep container dependencies from being hidden by the source mounts.
+- `backend` mounts its source, migrations, and data directories and runs `node --watch`, so API changes restart automatically.
 
 Stop services:
 
@@ -82,22 +81,19 @@ This directory is gitignored. MP3 files are named from track ids in the channel 
 
 ## Channels
 
-Channels live in:
+Channel configuration lives in PostgreSQL and is managed at:
 
 ```text
-backend/data/channels.json
+http://localhost:5500/admin
 ```
 
-Example:
+The editable fields are `name`, `description`, `cover`, `accentColor`, `enabled`, `mount`, `mpdPort`, `sortOrder`, and optional `trackIds`. The channel `id` is immutable after creation because it is used by URLs and media directories.
 
-```json
-{
-  "id": "main",
-  "name": "Main Radio",
-  "enabled": true,
-  "mount": "/main.mp3",
-  "mpdPort": 6600
-}
+The public API is:
+
+```text
+http://localhost:3001/channels
+http://localhost:3001/channels/main
 ```
 
 Each enabled channel starts a separate MPD process and streams to Icecast at its `mount`. With nginx proxying `/stream/` to Icecast, channel URLs become:
@@ -105,12 +101,6 @@ Each enabled channel starts a separate MPD process and streams to Icecast at its
 ```text
 https://skyharp.live/stream/main.mp3
 https://skyharp.live/stream/second.mp3
-```
-
-Admin UI:
-
-```text
-http://localhost:5500/admin
 ```
 
 The admin creates and updates channel records. For each channel, keep its media data in matching directories:
@@ -121,7 +111,7 @@ mpd/music/<channelId>/*.mp3
 frontend/public/covers/<channelId>/*.jpg
 ```
 
-If MPD logs `Failed to access /music/<channelId>`, create that folder and put the channel MP3 files there. The stream mount can exist in `channels.json`, but Icecast will not receive audio until MPD can read files from `mpd/music/<channelId>/`.
+If MPD logs `Failed to access /music/<channelId>`, create that folder and put the channel MP3 files there. The database record can exist without audio, but Icecast will not receive a stream until MPD can read files from `mpd/music/<channelId>/`.
 
 ## Metadata Format
 

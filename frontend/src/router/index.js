@@ -18,6 +18,21 @@ const router = createRouter({
       component: () => import('../views/AboutView.vue')
     },
     {
+      path: '/channel/:id',
+      name: 'channel',
+      component: () => import('../views/ChannelView.vue')
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: () => import('../views/AuthView.vue')
+    },
+    {
+      path: '/register',
+      name: 'register',
+      component: () => import('../views/AuthView.vue')
+    },
+    {
       path: '/admin',
       name: 'admin',
       component: () => import('../views/AdminView.vue')

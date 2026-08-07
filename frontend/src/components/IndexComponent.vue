@@ -1,148 +1,50 @@
 <template>
-  <div class="pb-8" ref="main">
-    <div class="mb-4 flex justify-center" v-if="channels.length > 1">
-      <div class="bg-white/10 pl-1 pr-2 py-2 rounded-full">
-        <select
-          class="text-sm text-white outline-none px-2"
-          v-model="selectedChannelId"
-          @change="changeChannel"
-        >
-          <option
-            class="text-black"
-            v-for="channel in channels"
-            :key="channel.id"
-            :value="channel.id"
-          >
-            {{ channel.name }}
-          </option>
-        </select>
-      </div>
-    </div>
-    <div class="relative z-[99] mt-8 w-[300px] max-w-full">
-      <AnimatedComponent delay="250" animation-type="slideup">
-        <!-- <div class="flex w-full justify-center text-[0.7rem] font-semibold uppercase tracking-[1px] text-[#555]">Now playing</div> -->
-        <div
-          class="absolute top-[0px] z-[999] flex h-[400px] w-full justify-center pt-[45%]"
-        >
-          <div
-            class="cursor-pointer transition-opacity duration-150 ease-in-out hover:opacity-[0.85]"
-            v-if="!playing && !loading"
-            @click="play"
-            :class="{ 'opacity-50': loading }"
-          >
-            <Play
-              class="h-[80px] w-[70px] fill-white text-white opacity-90"
-              :stroke-width="0"
-            />
-          </div>
-          <div
-            class="cursor-pointer transition-opacity duration-150 ease-in-out hover:opacity-[0.85]"
-            v-if="playing"
-            @click="pause"
-          >
-            <Pause
-              class="h-[80px] w-14 fill-white text-white opacity-90"
-              :stroke-width="0"
-            />
-          </div>
-          <div
-            class="cursor-pointer transition-opacity duration-150 ease-in-out hover:opacity-[0.85] pt-2"
-            v-if="loading"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 200 200"
-              width="60px"
-            >
-              <radialGradient
-                :id="loadingGradientId"
-                cx=".66"
-                fx=".66"
-                cy=".3125"
-                fy=".3125"
-                gradientTransform="scale(1.5)"
-              >
-                <stop offset="0" stop-color="#FFFFFF"></stop>
-                <stop offset=".3" stop-color="#FFFFFF" stop-opacity=".9"></stop>
-                <stop offset=".6" stop-color="#FFFFFF" stop-opacity=".6"></stop>
-                <stop offset=".8" stop-color="#FFFFFF" stop-opacity=".3"></stop>
-                <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"></stop>
-              </radialGradient>
-              <circle
-                transform-origin="center"
-                fill="none"
-                :stroke="`url(#${loadingGradientId})`"
-                stroke-width="10"
-                stroke-linecap="round"
-                stroke-dasharray="200 1000"
-                stroke-dashoffset="0"
-                cx="100"
-                cy="100"
-                r="70"
-              >
-                <animateTransform
-                  type="rotate"
-                  attributeName="transform"
-                  calcMode="spline"
-                  dur="2"
-                  values="360;0"
-                  keyTimes="0;1"
-                  keySplines="0 0 1 1"
-                  repeatCount="indefinite"
-                ></animateTransform>
-              </circle>
-              <circle
-                transform-origin="center"
-                fill="none"
-                opacity=".2"
-                stroke="#FFFFFF"
-                stroke-width="10"
-                stroke-linecap="round"
-                cx="100"
-                cy="100"
-                r="70"
-              ></circle>
-            </svg>
-          </div>
+  <section class="flex h-full w-full overflow-x-auto bg-[#050505] [scrollbar-width:thin]" aria-label="Radio channels">
+    <article
+      v-for="(channel, index) in channels"
+      :key="channel.id"
+      class="group relative isolate h-full min-w-0 basis-1/3 shrink-0 overflow-hidden bg-cover bg-center text-white max-[800px]:basis-full"
+      :style="coverStyle(channel.id, index)"
+    >
+      <div class="absolute inset-0 -z-10 bg-[linear-gradient(180deg,rgba(0,0,0,0.1)_25%,rgba(0,0,0,0.88)_100%)] backdrop-saturate-[0.85] transition-colors duration-300 group-hover:bg-black/10"></div>
+      <RouterLink class="absolute inset-0 z-0 p-0" :to="`/channel/${channel.id}`" :aria-label="`Open ${channel.name}`"></RouterLink>
+
+      <!-- <button
+        class="absolute top-1/2 left-1/2 z-[2] grid h-[74px] w-[74px] -translate-x-1/2 -translate-y-[42%] cursor-pointer place-items-center rounded-full border border-white/65 bg-black/25 p-0 text-white opacity-0 transition-all duration-200 group-hover:-translate-y-1/2 group-hover:opacity-100 hover:bg-black/50 focus-visible:-translate-y-1/2 focus-visible:opacity-100 max-[800px]:opacity-100"
+        type="button"
+        :aria-label="isPlaying(channel.id) ? `Pause ${channel.name}` : `Play ${channel.name}`"
+        @click="toggleChannel(channel)"
+      >
+        <span v-if="loadingChannelId === channel.id" class="h-7 w-7 animate-spin rounded-full border-2 border-white/35 border-t-white"></span>
+        <Pause v-else-if="isPlaying(channel.id)" class="h-8 w-8" :stroke-width="1.5" />
+        <Play v-else class="h-8 w-8" :stroke-width="1.5" />
+      </button> -->
+
+      <div class="pointer-events-none absolute right-[clamp(24px,3vw,58px)] bottom-[clamp(28px,5vh,68px)] left-[clamp(24px,3vw,58px)] z-[1]">
+
+        <h2 class="max-w-[9ch] text-[clamp(48px,10vw,180px)] leading-[0.84] font-semibold tracking-[1px] max-[800px]:text-[clamp(52px,90vw,180px)]">{{ channel.name }}</h2>
+        <div class="mt-[clamp(22px,4vh,42px)] flex flex-col font-mono text-[clamp(12px,1vw,17px)] leading-[1.45]" v-if="nowPlaying[channel.id]?.title">
+          <!-- <span>{{ nowPlaying[channel.id].artist }}</span>
+          <span class="opacity-65">{{ nowPlaying[channel.id].title }}</span> -->
+              <p class="mt-0 max-w-2xl font-mono text-[clamp(14px,1.25vw,22px)] leading-[1.35]">{{ channel.description }}</p>
         </div>
-        <ProjectItem :link="currentItem.link">
-          <template #image>
-            <img
-              v-if="currentItem.imageUrl"
-              :src="currentItem.imageUrl"
-              alt=""
-              @error="useFallbackImage"
-            />
-          </template>
-          <template #title>{{ currentItem.title }}</template>
-          <template #artist>{{ currentItem.artist }}</template>
-        </ProjectItem>
-      </AnimatedComponent>
+        <p class="mt-[clamp(22px,4vh,42px)] font-mono text-[clamp(12px,1vw,17px)] leading-[1.45] opacity-65" v-else>
+          Live radio stream
+        </p>
+      </div>
+    </article>
+
+    <div v-if="!channels.length" class="grid h-full w-full place-items-center">
+      Channels are loading…
     </div>
-  </div>
+  </section>
 </template>
 
 <script setup>
-import { computed, onBeforeUnmount, onMounted, ref } from "vue";
-import { Howl, Howler } from "howler";
+import { onBeforeUnmount, onMounted, reactive, ref } from "vue";
+import { RouterLink } from "vue-router";
+import { Howl } from "howler";
 import { Pause, Play } from "lucide-vue-next";
-import AnimatedComponent from "./AnimatedComponent.vue";
-import ProjectItem from "./ProjectItem.vue";
-// import gsap from 'gsap-trial';
-// import { ScrollTrigger } from 'gsap-trial/ScrollTrigger';
-// import { ScrollSmoother } from 'gsap-trial/ScrollSmoother';
-
-// gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
-const currentItem = ref({
-  imageUrl: "/cover.jpg",
-  fallbackImageUrl: null,
-  title: "",
-  artist: "",
-  media: "",
-  sleeve: "",
-  price: "",
-  link: "https://discogs.com/",
-});
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001";
 const STREAM_BASE_URL =
@@ -151,166 +53,93 @@ const STREAM_BASE_URL =
     /\/[^/]*$/,
     "",
   );
+
 const channels = ref([]);
-const selectedChannelId = ref("main");
-const loadingGradientId = `loading-${Math.random().toString(36).slice(2)}`;
+const nowPlaying = reactive({});
+const playingChannelId = ref(null);
+const loadingChannelId = ref(null);
+let player = null;
 let trackInterval;
 
-const selectedChannel = computed(() =>
-  channels.value.find((channel) => channel.id === selectedChannelId.value),
-);
-const currentStreamUrl = computed(() => {
-  const mount =
-    selectedChannel.value?.mount || `/${selectedChannelId.value}.mp3`;
+const streamUrl = (channel) => {
+  const mount = channel.mount || `/${channel.id}.mp3`;
   return `${STREAM_BASE_URL.replace(/\/$/, "")}${mount.startsWith("/") ? mount : `/${mount}`}`;
-});
+};
+
+const fetchNowPlaying = async (channel) => {
+  try {
+    const response = await fetch(`${API_URL}/channels/${channel.id}/nowplaying`);
+    const data = await response.json();
+    nowPlaying[channel.id] = data;
+  } catch (error) {
+    console.error(`Failed to fetch ${channel.id}`, error);
+  }
+};
 
 const fetchChannels = async () => {
   try {
-    const res = await fetch(`${API_URL}/channels`);
-    const data = await res.json();
+    const response = await fetch(`${API_URL}/channels`);
+    const data = await response.json();
     channels.value = data.data.filter((channel) => channel.enabled);
-    selectedChannelId.value = channels.value[0]?.id || "main";
-  } catch (err) {
-    console.error("Failed to fetch channels", err);
+    await Promise.all(channels.value.map(fetchNowPlaying));
+  } catch (error) {
+    console.error("Failed to fetch channels", error);
   }
 };
 
-const fetchTrack = async () => {
-  try {
-    const res = await fetch(
-      `${API_URL}/channels/${selectedChannelId.value}/nowplaying`,
-    );
-    const data = await res.json();
-    if (data.title) {
-      currentItem.value = data;
-    }
-  } catch (err) {
-    console.error("Failed to fetch current track", err);
-  }
-};
+const fallbackColors = ["#111111", "#174f28", "#49325b", "#783323"];
 
-const changeChannel = async () => {
-  stop();
-  await fetchTrack();
-  play()
-};
-
-const useFallbackImage = () => {
-  const fallbackImageUrl = currentItem.value.fallbackImageUrl;
-  if (fallbackImageUrl && currentItem.value.imageUrl !== fallbackImageUrl) {
-    currentItem.value.imageUrl = fallbackImageUrl;
-  }
-};
-
-const playlist = ref([]);
-const playerIndex = ref(0);
-const playing = ref(false);
-const loop = ref(false);
-const shuffle = ref(false);
-const seek = ref(0);
-const loading = ref(false);
-const playerIsActive = ref(false);
-const currentTrack = ref(null);
-const source = ref(undefined);
-const player = ref(undefined);
-
-const play = (index) => {
-  let track = {
-    freq: "81.4",
-    title: "Revibed Radio",
-    src: currentStreamUrl.value,
-    howl: null,
+const coverStyle = (channelId, index) => {
+  const imageUrl = nowPlaying[channelId]?.imageUrl;
+  return {
+    backgroundColor: fallbackColors[index % fallbackColors.length],
+    ...(imageUrl ? { backgroundImage: `url("${imageUrl}")` } : {}),
   };
+};
 
-  loading.value = true;
-  /// if track is playing now - play from pause
-  if (track.howl) {
-    console.log("from pause");
-    player.value = track.howl;
+const isPlaying = (channelId) => playingChannelId.value === channelId;
 
-    /// new track
-  } else {
-    player.value = track.howl = new Howl({
-      src: [track.src],
-      html5: true,
-      volume: 0.5,
-      onend: () => {},
-      onplay: () => {
-        playing.value = true;
-        currentTrack.value = track;
-        loading.value = false;
-      },
-    });
+const stopPlayer = () => {
+  if (player) {
+    player.unload();
+    player = null;
+  }
+  playingChannelId.value = null;
+  loadingChannelId.value = null;
+};
+
+const toggleChannel = (channel) => {
+  if (isPlaying(channel.id)) {
+    stopPlayer();
+    return;
   }
 
-  //console.log('player.value', player.value)
-  player.value.play();
-  /// selectedTrack, currentTrack
-};
-const pause = (index) => {
-  //console.log('pause', currentTrack.value.title)
-  currentTrack.value.howl.pause();
-  playing.value = false;
-  console.log("currentTrack.value.howl ", currentTrack.value.howl);
-};
-const stop = (index) => {
-  Howler.unload();
-  playing.value = false;
-  //this.$store.commit('player/setPlaying', false)
+  stopPlayer();
+  loadingChannelId.value = channel.id;
+  player = new Howl({
+    src: [streamUrl(channel)],
+    html5: true,
+    volume: 0.5,
+    onplay: () => {
+      playingChannelId.value = channel.id;
+      loadingChannelId.value = null;
+    },
+    onloaderror: stopPlayer,
+    onplayerror: stopPlayer,
+  });
+  player.play();
 };
 
 onMounted(() => {
-  fetchChannels().then(fetchTrack);
-  trackInterval = setInterval(fetchTrack, 5000);
+  fetchChannels();
+  trackInterval = window.setInterval(
+    () => Promise.all(channels.value.map(fetchNowPlaying)),
+    5000,
+  );
 });
 
 onBeforeUnmount(() => {
-  clearInterval(trackInterval);
+  window.clearInterval(trackInterval);
+  stopPlayer();
 });
-
-// const main = ref();
-// let smoother;
-// let ctx;
-
-// onMounted(() => {
-//   ctx = gsap.context(() => {
-//     // create the smooth scroller FIRST!
-//     // smoother = ScrollSmoother.create({
-//     //   smooth: 2, // seconds it takes to "catch up" to native scroll position
-//     //   effects: true, // look for data-speed and data-lag attributes on elements and animate accordingly
-//     // });
-//     // ScrollTrigger.create({
-//     //   trigger: '.circle',
-//     //   pin: false,
-//     //   // start: 'center center',
-//     //   // end: '+=300',
-//     //   markers: false,
-//     // });
-
-//     // let tl = gsap.timeline({
-//     //   // yes, we can add it to an entire timeline!
-//     //   scrollTrigger: {
-//     //     trigger: '.index',
-//     //     pin: true, // pin the trigger element while active
-//     //     start: 'top top', // when the top of the trigger hits the top of the viewport
-//     //     end: '+=500', // end after scrolling 500px beyond the start
-//     //     scrub: 1, // smooth scrubbing, takes 1 second to "catch up" to the scrollbar
-//     //     snap: {
-//     //       snapTo: 'labels', // snap to the closest label in the timeline
-//     //       duration: { min: 0.2, max: 3 }, // the snap animation should be at least 0.2 seconds, but no more than 3 seconds (determined by velocity)
-//     //       delay: 0.2, // wait 0.2 seconds from the last scroll event before doing the snapping
-//     //       ease: 'power1.inOut' // the ease of the snap animation ("power3" by default)
-//     //     }
-//     //   }
-//     // });
-
-//     // add animations and labels to the timeline
-//     tl
-//     .addLabel('start')
-//     .from('.circle', { scale: 0.3, rotation: 45, autoAlpha: 0 })
-
-//   }, main.value);
-//   //
-// });
 </script>

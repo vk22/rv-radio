@@ -3,7 +3,7 @@ import IndexComponent from '../components/IndexComponent.vue'
 </script>
 
 <template>
-  <main>
+  <main class="h-full w-full">
     <IndexComponent />
   </main>
 </template>

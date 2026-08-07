@@ -1,129 +1,111 @@
 <template>
-  <main class="min-h-screen w-full pt-24 text-white">
-    <section class="mx-auto w-full max-w-3xl px-4">
-      <div class="mb-6 flex items-center justify-between gap-4">
-        <h1 class="text-xl font-semibold">Channels</h1>
-        <button class="rounded border border-white/20 px-3 py-2 text-sm hover:bg-white/10" @click="loadChannels">
-          Refresh
-        </button>
+  <main class="h-full w-full overflow-y-auto py-12 text-white">
+    <section class="mx-auto w-full max-w-5xl px-4">
+      <div class="mb-8 flex items-center justify-between gap-4">
+        <div>
+          <p class="font-mono text-xs tracking-[0.15em] uppercase text-white/45">Administration</p>
+          <h1 class="mt-2 text-4xl font-semibold">Channels</h1>
+        </div>
+        <button class="rounded border border-white/20 px-3 py-2 text-sm hover:bg-white/10" @click="loadChannels">Refresh</button>
       </div>
 
-      <form class="mb-8 grid gap-3 border-b border-white/10 pb-6 sm:grid-cols-[1fr_1fr_auto]" @submit.prevent="createChannel">
-        <input
-          class="bg-white/10 px-3 py-2 text-sm outline-none placeholder:text-white/40"
-          v-model="newChannel.id"
-          placeholder="channel-id"
-        />
-        <input
-          class="bg-white/10 px-3 py-2 text-sm outline-none placeholder:text-white/40"
-          v-model="newChannel.name"
-          placeholder="Channel name"
-        />
-        <button class="bg-white px-4 py-2 text-sm font-semibold text-black hover:bg-white/85" type="submit">
-          Add
-        </button>
+      <form class="mb-10 grid gap-4 border border-white/10 bg-white/[0.025] p-5 sm:grid-cols-2" @submit.prevent="createChannel">
+        <h2 class="sm:col-span-2 text-lg font-semibold">New channel</h2>
+        <label class="grid gap-1 text-xs text-white/55">ID<input class="w-full bg-white/10 px-3 py-2 text-sm text-white outline-none" v-model.trim="newChannel.id" placeholder="channel-id" required /></label>
+        <label class="grid gap-1 text-xs text-white/55">Name<input class="w-full bg-white/10 px-3 py-2 text-sm text-white outline-none" v-model.trim="newChannel.name" placeholder="Channel name" required /></label>
+        <label class="grid gap-1 text-xs text-white/55 sm:col-span-2">Description<textarea class="min-h-24 w-full resize-y bg-white/10 px-3 py-2 text-sm text-white outline-none" v-model.trim="newChannel.description"></textarea></label>
+        <label class="grid gap-1 text-xs text-white/55">Cover URL<input class="w-full bg-white/10 px-3 py-2 text-sm text-white outline-none" v-model.trim="newChannel.cover" placeholder="/channels/cover.jpg" /></label>
+        <label class="grid gap-1 text-xs text-white/55">Accent color<div class="flex gap-2"><input class="h-10 w-12 bg-transparent" type="color" v-model="newChannel.accentColor" /><input class="w-full flex-1 bg-white/10 px-3 py-2 text-sm text-white outline-none" v-model.trim="newChannel.accentColor" /></div></label>
+        <label class="grid gap-1 text-xs text-white/55">Mount<input class="w-full bg-white/10 px-3 py-2 text-sm text-white outline-none" v-model.trim="newChannel.mount" placeholder="/channel.mp3" required /></label>
+        <label class="grid gap-1 text-xs text-white/55">MPD port<input class="w-full bg-white/10 px-3 py-2 text-sm text-white outline-none" v-model.number="newChannel.mpdPort" type="number" min="1024" max="65535" required /></label>
+        <label class="grid gap-1 text-xs text-white/55">Sort order<input class="w-full bg-white/10 px-3 py-2 text-sm text-white outline-none" v-model.number="newChannel.sortOrder" type="number" /></label>
+        <label class="flex items-center gap-2 self-end py-2 text-sm"><input v-model="newChannel.enabled" type="checkbox" /> Enabled</label>
+        <label class="grid gap-1 text-xs text-white/55 sm:col-span-2">Track IDs (comma separated)<input class="w-full bg-white/10 px-3 py-2 text-sm text-white outline-none" v-model="newChannel.trackIdsText" placeholder="Leave empty to use all channel tracks" /></label>
+        <button class="bg-white px-4 py-3 text-sm font-semibold text-black hover:bg-white/85 sm:col-span-2" type="submit">Add channel</button>
       </form>
 
-      <div class="grid gap-3">
-        <article
-          class="grid gap-3 border border-white/10 p-4 sm:grid-cols-[1fr_auto_auto]"
-          v-for="channel in channels"
-          :key="channel.id"
-        >
-          <div>
-            <div class="font-semibold">{{ channel.name }}</div>
-            <div class="text-sm text-white/50">{{ channel.id }} · {{ channel.mount }} · MPD {{ channel.mpdPort }}</div>
+      <div class="grid gap-5">
+        <form class="grid gap-4 border border-white/10 p-5 sm:grid-cols-2" v-for="channel in channels" :key="channel.id" @submit.prevent="saveChannel(channel)">
+          <div class="flex items-center justify-between gap-4 sm:col-span-2">
+            <div><strong class="text-lg">{{ channel.name }}</strong><p class="font-mono text-xs text-white/40">{{ channel.id }} · ID cannot be changed</p></div>
+            <span class="h-6 w-6 rounded-full border border-white/20" :style="{ backgroundColor: channel.accentColor }"></span>
           </div>
-
-          <button
-            class="border border-white/20 px-3 py-2 text-sm hover:bg-white/10"
-            @click="toggleChannel(channel)"
-          >
-            {{ channel.enabled ? 'Disable' : 'Enable' }}
-          </button>
-
-          <button class="border border-red-300/40 px-3 py-2 text-sm text-red-200 hover:bg-red-500/10" @click="deleteChannel(channel)">
-            Delete
-          </button>
-        </article>
+          <label class="grid gap-1 text-xs text-white/55">Name<input class="w-full bg-white/10 px-3 py-2 text-sm text-white outline-none" v-model.trim="channel.name" required /></label>
+          <label class="grid gap-1 text-xs text-white/55">Cover URL<input class="w-full bg-white/10 px-3 py-2 text-sm text-white outline-none" v-model.trim="channel.cover" /></label>
+          <label class="grid gap-1 text-xs text-white/55 sm:col-span-2">Description<textarea class="min-h-24 w-full resize-y bg-white/10 px-3 py-2 text-sm text-white outline-none" v-model.trim="channel.description"></textarea></label>
+          <label class="grid gap-1 text-xs text-white/55">Accent color<div class="flex gap-2"><input class="h-10 w-12 bg-transparent" type="color" v-model="channel.accentColor" /><input class="w-full flex-1 bg-white/10 px-3 py-2 text-sm text-white outline-none" v-model.trim="channel.accentColor" /></div></label>
+          <label class="grid gap-1 text-xs text-white/55">Mount<input class="w-full bg-white/10 px-3 py-2 text-sm text-white outline-none" v-model.trim="channel.mount" required /></label>
+          <label class="grid gap-1 text-xs text-white/55">MPD port<input class="w-full bg-white/10 px-3 py-2 text-sm text-white outline-none" v-model.number="channel.mpdPort" type="number" min="1024" max="65535" required /></label>
+          <label class="grid gap-1 text-xs text-white/55">Sort order<input class="w-full bg-white/10 px-3 py-2 text-sm text-white outline-none" v-model.number="channel.sortOrder" type="number" /></label>
+          <label class="flex items-center gap-2 self-end py-2 text-sm"><input v-model="channel.enabled" type="checkbox" /> Enabled</label>
+          <label class="grid gap-1 text-xs text-white/55 sm:col-span-2">Track IDs (comma separated)<input class="w-full bg-white/10 px-3 py-2 text-sm text-white outline-none" v-model="channel.trackIdsText" /></label>
+          <div class="flex justify-end gap-3 sm:col-span-2">
+            <button class="border border-red-300/40 px-4 py-2 text-sm text-red-200 hover:bg-red-500/10" type="button" @click="deleteChannel(channel)">Delete</button>
+            <button class="bg-white px-5 py-2 text-sm font-semibold text-black hover:bg-white/85" type="submit">Save</button>
+          </div>
+        </form>
       </div>
 
-      <p class="mt-6 text-sm text-white/50" v-if="message">{{ message }}</p>
+      <p class="sticky bottom-4 mt-6 border border-white/10 bg-[#151515] p-3 text-sm" v-if="message">{{ message }}</p>
     </section>
   </main>
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue';
+import { onMounted, reactive, ref } from "vue";
+import { apiRequest } from "../auth";
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001";
 const channels = ref([]);
 const message = ref("");
-const newChannel = ref({
-  id: "",
-  name: "",
+const emptyChannel = () => ({
+  id: "", name: "", description: "", cover: "", accentColor: "#111111",
+  enabled: true, mount: "", mpdPort: 6600, sortOrder: 0, trackIdsText: "",
+});
+const newChannel = reactive(emptyChannel());
+
+const toPayload = (channel) => ({
+  name: channel.name,
+  description: channel.description,
+  cover: channel.cover || null,
+  accentColor: channel.accentColor,
+  enabled: channel.enabled,
+  mount: channel.mount,
+  mpdPort: channel.mpdPort,
+  sortOrder: channel.sortOrder,
+  trackIds: channel.trackIdsText.split(",").map((id) => id.trim()).filter(Boolean),
 });
 
-const request = async (path, options = {}) => {
-  const response = await fetch(`${API_URL}${path}`, {
-    headers: {
-      "Content-Type": "application/json",
-      ...(options.headers || {}),
-    },
-    ...options,
-  });
-
-  if (!response.ok) {
-    throw new Error(await response.text());
-  }
-
-  return response.json();
-};
-
 const loadChannels = async () => {
-  const data = await request("/admin/channels");
-  channels.value = data.data;
+  try {
+    const result = await apiRequest("/admin/channels");
+    channels.value = result.data.map((channel) => ({ ...channel, trackIdsText: (channel.trackIds || []).join(", ") }));
+  } catch (error) { message.value = error.message; }
 };
 
 const createChannel = async () => {
-  const id = newChannel.value.id.trim();
-  const name = newChannel.value.name.trim() || id;
-
-  if (!id) {
-    message.value = "Channel id is required.";
-    return;
-  }
-
-  const mpdPort = 6600 + channels.value.length;
-  await request("/admin/channels", {
-    method: "POST",
-    body: JSON.stringify({
-      id,
-      name,
-      enabled: true,
-      mount: `/${id}.mp3`,
-      mpdPort,
-    }),
-  });
-
-  newChannel.value = { id: "", name: "" };
-  message.value = "Channel saved. MPD manager will apply it automatically.";
-  await loadChannels();
+  try {
+    await apiRequest("/admin/channels", { method: "POST", body: JSON.stringify({ id: newChannel.id, ...toPayload(newChannel) }) });
+    Object.assign(newChannel, emptyChannel());
+    message.value = "Channel created. MPD will apply the change automatically.";
+    await loadChannels();
+  } catch (error) { message.value = error.message; }
 };
 
-const toggleChannel = async (channel) => {
-  await request(`/admin/channels/${channel.id}`, {
-    method: "PATCH",
-    body: JSON.stringify({ enabled: !channel.enabled }),
-  });
-  message.value = "Channel updated. MPD manager will apply it automatically.";
-  await loadChannels();
+const saveChannel = async (channel) => {
+  try {
+    await apiRequest(`/admin/channels/${channel.id}`, { method: "PATCH", body: JSON.stringify(toPayload(channel)) });
+    message.value = `${channel.name} saved. MPD will apply the change automatically.`;
+    await loadChannels();
+  } catch (error) { message.value = error.message; }
 };
 
 const deleteChannel = async (channel) => {
-  await request(`/admin/channels/${channel.id}`, { method: "DELETE" });
-  message.value = "Channel deleted. MPD manager will apply it automatically.";
-  await loadChannels();
+  if (!window.confirm(`Delete ${channel.name}? Likes and comments for this channel will also be deleted.`)) return;
+  try {
+    await apiRequest(`/admin/channels/${channel.id}`, { method: "DELETE" });
+    message.value = `${channel.name} deleted.`;
+    await loadChannels();
+  } catch (error) { message.value = error.message; }
 };
 
 onMounted(loadChannels);

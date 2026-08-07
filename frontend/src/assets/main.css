@@ -1,5 +1,11 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=PT+Mono&family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&family=Sofia+Sans+Extra+Condensed:ital,wght@0,1..1000;1,1..1000&display=swap');
 @import "tailwindcss";
+
+@theme {
+  --font-base: "Inter", sans-serif;
+  --font-sans: "Sofia Sans Extra Condensed", sans-serif;
+  --font-mono: "PT Mono", sans-serif;
+}
 
 @layer base {
   *,
@@ -9,18 +15,19 @@
   }
 
   body {
-    @apply flex min-h-screen place-items-center bg-[#060606] font-sans text-sm leading-[1.6] text-neutral-200 antialiased transition-colors duration-500;
-    font-family: 'Inter', sans-serif;
-    text-rendering: optimizeLegibility;
-    -moz-osx-font-smoothing: grayscale;
+    @apply min-h-screen bg-[#060606] font-base text-sm leading-[1.6] text-neutral-200 antialiased;
   }
 
   #app {
-    @apply mx-auto flex w-[600px] max-w-full justify-center p-8 font-normal;
+    @apply w-full;
   }
 
   a {
     @apply p-[3px] no-underline transition duration-[400ms];
+  }
+
+  h1, h2, h3, h4 {
+    @apply font-sans;
   }
 
   img {
@@ -42,7 +49,7 @@
 
   .animated-component.fade-enter-from,
   .animated-component.slideup-enter-from {
-    transition: none;
+    @apply transition-none;
   }
 
   .fade-enter-active,

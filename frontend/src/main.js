@@ -4,6 +4,7 @@ import { createApp } from 'vue';
 
 import App from './App.vue'
 import router from './router'
+import { loadCurrentUser } from './auth'
 
 export const appear = {
     beforeMount(element) {
@@ -32,4 +33,5 @@ const app = createApp(App)
 app.use(router)
 app.directive('appear', appear);
 
+loadCurrentUser();
 app.mount('#app')
