@@ -3,12 +3,14 @@
   <admin>admin@example.com</admin>
 
   <limits>
-    <clients>100</clients>
-    <sources>24</sources>
-    <queue-size>524288</queue-size>
-    <client-timeout>30</client-timeout>
-    <header-timeout>15</header-timeout>
-    <source-timeout>10</source-timeout>
+      <clients>100</clients>
+      <sources>24</sources>
+      <queue-size>524288</queue-size>
+      <burst-on-connect>1</burst-on-connect>
+      <burst-size>32768</burst-size>
+      <client-timeout>30</client-timeout>
+      <header-timeout>15</header-timeout>
+      <source-timeout>10</source-timeout>
   </limits>
 
   <authentication>
