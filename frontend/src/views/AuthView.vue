@@ -1,8 +1,8 @@
 <template>
   <main class="grid min-h-full place-items-center px-6 py-12">
     <form class="w-full max-w-[440px]" @submit.prevent="submit">
-      <p class="mb-[14px] font-mono text-xs tracking-[0.18em] uppercase opacity-55">Skyharp community</p>
-      <h1 class="text-[clamp(48px,7vw,78px)] leading-[0.95] tracking-[-0.055em]">{{ isRegister ? "Create account" : "Welcome back" }}</h1>
+      <!-- <p class="mb-[14px] font-mono text-xs tracking-[0.18em] uppercase opacity-55">Skyharp community</p> -->
+      <h1 class="text-[clamp(48px,7vw,78px)] leading-[.95] tracking-[0.005em]">{{ isRegister ? "Create account" : "Login" }}</h1>
       <p class="mt-[22px] mb-9 text-[#aaa]">
         {{ isRegister ? "Join the conversation around every channel." : "Sign in to like channels and leave comments." }}
       </p>

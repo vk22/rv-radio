@@ -1,5 +1,5 @@
 <template>
-  <section class="flex h-full w-full overflow-x-auto bg-[#050505] [scrollbar-width:thin]" aria-label="Radio channels">
+  <section class="flex max-[800px]:flex-col h-full w-full overflow-x-auto bg-[#050505] [scrollbar-width:thin]" aria-label="Radio channels">
     <article
       v-for="(channel, index) in channels"
       :key="channel.id"
