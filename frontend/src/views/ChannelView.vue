@@ -1,5 +1,5 @@
 <template>
-  <main v-if="channel" class="grid h-full grid-cols-2 max-[800px]:grid-rows-2 bg-[linear-gradient(145deg,var(--accent),#050505_72%)] max-[800px]:block max-[800px]:h-full max-[800px]:min-h-full max-[800px]:overflow-y-auto" :style="{ '--accent': channel.accentColor }">
+  <main v-if="channel" class="grid h-full grid-cols-2 max-[800px]:grid-rows-2 bg-[linear-gradient(90deg,var(--accent),#050505_72%)] max-[800px]:block max-[800px]:h-full max-[800px]:min-h-full max-[800px]:overflow-y-auto" :style="{ '--accent': channel.accentColor }">
     <section class="flex min-w-0 flex-col justify-between  p-[clamp(24px,4.5vw,48px)] max-[800px]:min-h-[calc(100dvh-70px)] max-[800px]:gap-16">
       <RouterLink to="/" class="self-start font-mono text-xs text-[#aaa]">← All channels</RouterLink>
       <div>
