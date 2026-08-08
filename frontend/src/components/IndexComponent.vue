@@ -1,8 +1,14 @@
 <template>
-  <section class="flex max-[800px]:flex-col h-full w-full overflow-x-auto bg-[#050505] [scrollbar-width:thin]" aria-label="Radio channels">
+  <section
+    ref="channelRail"
+    class="flex h-full w-full overflow-x-auto overflow-y-hidden bg-[#050505] [scrollbar-width:thin] max-[800px]:flex-col max-[800px]:overflow-x-hidden max-[800px]:overflow-y-auto"
+    aria-label="Radio channels"
+    @scroll="keepScrollLooped"
+    @wheel="handleWheel"
+  >
     <article
-      v-for="(channel, index) in channels"
-      :key="channel.id"
+      v-for="({ channel, copy }, index) in loopChannels"
+      :key="`${copy}-${channel.id}`"
       class="group relative isolate h-full min-w-0 basis-1/3 shrink-0 overflow-hidden bg-cover bg-center text-white max-[800px]:basis-full bg-[var(--accent)] "
       :style="{ '--accent': channel.accentColor }"
     >
@@ -42,7 +48,7 @@
 </template>
 
 <script setup>
-import { onBeforeUnmount, onMounted, reactive, ref } from "vue";
+import { computed, nextTick, onBeforeUnmount, onMounted, reactive, ref } from "vue";
 import { RouterLink } from "vue-router";
 import { Howl } from "howler";
 import { LoaderCircle, Pause, Play } from "lucide-vue-next";
@@ -56,11 +62,71 @@ const STREAM_BASE_URL =
   );
 
 const channels = ref([]);
+const channelRail = ref(null);
 const nowPlaying = reactive({});
 const playingChannelId = ref(null);
 const loadingChannelId = ref(null);
 let player = null;
 let trackInterval;
+let resizeObserver;
+let isRepositioning = false;
+
+const loopChannels = computed(() =>
+  [0, 1, 2].flatMap((copy) =>
+    channels.value.map((channel) => ({ channel, copy })),
+  ),
+);
+
+const isMobileRail = () => window.matchMedia("(max-width: 800px)").matches;
+
+const getRailMetrics = () => {
+  const rail = channelRail.value;
+  if (!rail || !channels.value.length) return null;
+
+  const vertical = isMobileRail();
+  return {
+    rail,
+    vertical,
+    segmentSize: (vertical ? rail.scrollHeight : rail.scrollWidth) / 3,
+  };
+};
+
+const setRailPosition = (position) => {
+  const metrics = getRailMetrics();
+  if (!metrics || !metrics.segmentSize) return;
+  if (metrics.vertical) metrics.rail.scrollTop = position;
+  else metrics.rail.scrollLeft = position;
+};
+
+const centerRail = () => {
+  const metrics = getRailMetrics();
+  if (!metrics?.segmentSize) return;
+  setRailPosition(metrics.segmentSize);
+};
+
+const keepScrollLooped = () => {
+  if (isRepositioning) return;
+  const metrics = getRailMetrics();
+  if (!metrics?.segmentSize) return;
+
+  const position = metrics.vertical ? metrics.rail.scrollTop : metrics.rail.scrollLeft;
+  let nextPosition = position;
+  if (position < metrics.segmentSize * 0.5) nextPosition += metrics.segmentSize;
+  else if (position >= metrics.segmentSize * 1.5) nextPosition -= metrics.segmentSize;
+  if (nextPosition === position) return;
+
+  isRepositioning = true;
+  setRailPosition(nextPosition);
+  requestAnimationFrame(() => { isRepositioning = false; });
+};
+
+const handleWheel = (event) => {
+  if (isMobileRail() || !channelRail.value) return;
+  event.preventDefault();
+  channelRail.value.scrollLeft += Math.abs(event.deltaX) > Math.abs(event.deltaY)
+    ? event.deltaX
+    : event.deltaY;
+};
 
 const streamUrl = (channel) => {
   const mount = channel.mount || `/${channel.id}.mp3`;
@@ -82,6 +148,8 @@ const fetchChannels = async () => {
     const response = await fetch(`${API_URL}/channels`);
     const data = await response.json();
     channels.value = data.data.filter((channel) => channel.enabled);
+    await nextTick();
+    centerRail();
     await Promise.all(channels.value.map(fetchNowPlaying));
   } catch (error) {
     console.error("Failed to fetch channels", error);
@@ -144,6 +212,8 @@ const toggleChannel = (channel) => {
 
 onMounted(() => {
   fetchChannels();
+  resizeObserver = new ResizeObserver(centerRail);
+  if (channelRail.value) resizeObserver.observe(channelRail.value);
   trackInterval = window.setInterval(
     () => Promise.all(channels.value.map(fetchNowPlaying)),
     5000,
@@ -152,6 +222,7 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
   window.clearInterval(trackInterval);
+  resizeObserver?.disconnect();
   stopPlayer();
 });
 </script>
