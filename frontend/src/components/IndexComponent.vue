@@ -23,7 +23,7 @@
 
       <div class="pointer-events-none absolute right-[clamp(24px,3vw,58px)] bottom-[clamp(28px,5vh,68px)] left-[clamp(24px,3vw,58px)] z-[1]">
 
-        <h2 class="max-w-[9ch] text-[clamp(48px,10vw,180px)] leading-[0.84] font-semibold tracking-[1px] max-[800px]:text-[clamp(52px,90vw,180px)]">{{ channel.name }}</h2>
+        <h2 class="max-w-[9ch] text-[clamp(48px,10vw,180px)] leading-[0.84] font-semibold tracking-[1px] max-[800px]:text-[clamp(52px,90vw,120px)]">{{ channel.name }}</h2>
         <div class="mt-[clamp(22px,4vh,42px)] flex flex-col font-mono text-[clamp(12px,1vw,17px)] leading-[1.45]" v-if="nowPlaying[channel.id]?.title">
           <!-- <span>{{ nowPlaying[channel.id].artist }}</span>
           <span class="opacity-65">{{ nowPlaying[channel.id].title }}</span> -->

@@ -15,7 +15,7 @@
           <Pause v-else-if="playing" class="absolute top-1/2 left-1/2 h-[42px] w-[42px] -translate-x-1/2 -translate-y-1/2 drop-shadow-[0_2px_8px_#000]" />
           <Play v-else class="absolute top-1/2 left-1/2 h-[42px] w-[42px] -translate-x-1/2 -translate-y-1/2 drop-shadow-[0_2px_8px_#000]" />
         </button>
-        <div class="flex min-w-0 font-sans flex-col text-[clamp(15px,3.5vw,35px)] leading-[1.2]">
+        <div class="flex min-w-0 font-sans flex-col text-[clamp(15px,3.5vw,35px)] max-[800px]:text-[clamp(20px,3.5vw,45px)] leading-[1.2]">
           <strong>{{ track.artist || "Live stream" }}</strong>
           <span class="opacity-70">{{ track.title || "Now playing" }}</span>
           <button class="mt-[10px] flex cursor-pointer items-center gap-2 border-0 bg-transparent p-0" type="button" :class="channel.likedByCurrentUser ? 'text-[#ff7777]' : 'text-white'" @click="toggleLike">
