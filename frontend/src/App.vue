@@ -13,6 +13,6 @@ import { auth, logout } from "./auth";
       <button v-if="auth.user" class="cursor-pointer rounded-[3px] border border-white/20 bg-white/5 px-[13px] py-2 text-[15px] leading-none text-white" type="button" @click="logout">{{ auth.user.username }} / Log out</button>
       <RouterLink v-else to="/login" class="rounded-[3px] border border-white/20 bg-white/5 px-[13px] py-2 text-[15px] leading-none text-white">Join</RouterLink>
     </header>
-    <RouterView class="pt-[6vh] max-[800px]:pt-[74px]"/>
+    <RouterView class="pt-[84px] max-[800px]:pt-[74px]"/>
   </div>
 </template>
