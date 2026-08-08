@@ -479,5 +479,4 @@ app.use((error, _req, res, _next) => {
 });
 
 await migrate();
-for (const channel of await readChannels()) await ensureChannelStorage(channel.id);
 app.listen(PORT, () => console.log(`Backend running on http://localhost:${PORT}`));
