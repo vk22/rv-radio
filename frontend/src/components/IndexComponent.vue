@@ -10,7 +10,7 @@
       <RouterLink class="absolute inset-0 z-0 p-0" :to="`/channel/${channel.id}`" :aria-label="`Open ${channel.name}`"></RouterLink>
 
       <button
-        class="absolute top-[4rem] right-[0rem] z-[2] grid h-[74px] w-[74px] -translate-x-1/2 -translate-y-[42%] cursor-pointer place-items-center rounded-full  bg-black/25 p-0 text-white opacity-0 transition-all duration-200 group-hover:-translate-y-1/2 group-hover:opacity-100 hover:bg-black/50 focus-visible:-translate-y-1/2 focus-visible:opacity-100 max-[800px]:opacity-100"
+        class="absolute top-[4rem] right-[0rem] max-[800px]:top-[3rem] max-[800px]:right-[-1rem] z-[2] grid h-[74px] w-[74px] -translate-x-1/2 -translate-y-[42%] cursor-pointer place-items-center rounded-full  bg-black/25 p-0 text-white opacity-0 transition-all duration-200 group-hover:-translate-y-1/2 group-hover:opacity-100 hover:bg-black/50 focus-visible:-translate-y-1/2 focus-visible:opacity-100 max-[800px]:opacity-100"
         type="button"
         :aria-label="loadingChannelId === channel.id ? `Cancel loading ${channel.name}` : isPlaying(channel.id) ? `Pause ${channel.name}` : `Play ${channel.name}`"
         :aria-busy="loadingChannelId === channel.id"
