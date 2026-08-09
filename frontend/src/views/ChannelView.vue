@@ -1,7 +1,7 @@
 <template>
   <main v-if="channel" class="grid h-full grid-cols-2 max-[800px]:grid-rows-2 bg-[linear-gradient(90deg,var(--accent),#050505_72%)] max-[800px]:block max-[800px]:h-full max-[800px]:min-h-full max-[800px]:overflow-y-auto" :style="{ '--accent': channel.accentColor }">
     <section class="flex min-w-0 flex-col justify-between  p-[clamp(24px,4.5vw,48px)] max-[800px]:min-h-[calc(100dvh-70px)] max-[800px]:gap-16">
-      <RouterLink to="/" class="self-start font-mono text-xs text-[#aaa]">← All channels</RouterLink>
+      <RouterLink to="/" class="self-start font-mono text-xs text-[#fff]">← All channels</RouterLink>
       <div>
         <h1 class="max-w-[10ch] text-[clamp(102px,9.2vw,184px)] font-semibold leading-[0.88] tracking-[0.001px]">{{ channel.name }}</h1>
         <p class="mt-9 max-w-2xl font-mono text-[clamp(14px,1.25vw,22px)] leading-[1.35]">{{ channel.description }}</p>
